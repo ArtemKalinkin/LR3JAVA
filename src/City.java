@@ -86,6 +86,7 @@ public class City {
             company.input(listOfCompany);
             listOfCompany.add(company);
         } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить ввод компаний (y/n):"));
+        incrementTotalCities();
     }
 
     public static void tableHeader() {
@@ -206,15 +207,23 @@ public class City {
         number = chooseCompany();
         Company.tableHeader();
         listOfCompany.get(number).output(0);
-        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данное компанию из списка?"))
+        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данное компанию из списка?")) {
             listOfCompany.remove(number);
+            Company.decrementTotalCompanies();
+        }
     }
 
     public static void incrementTotalCities() {
         totalCities++;
     }
 
-    public static void printTotalCities() {
-        System.out.println("Всего вы внесли в список " + totalCities + " субъектов");
+    public static void decrementTotalCities() {
+        totalCities--;
     }
+
+    public static void printTotalCities() {
+        System.out.println("Всего вы внесли в список " + totalCities + " городов");
+    }
+
 }
+

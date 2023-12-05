@@ -144,8 +144,10 @@ public class AuxiliaryClass {
             number = chooseContinent(listOfContinents);
             Continent.tableHeader();
             listOfContinents.get(number).output(0);
-            if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный континент из списка?"))
+            if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный континент из списка?")) {
                 listOfContinents.remove(number);
+                Continent.decrementTotalContinents();
+            }
         } else
             System.out.println(AuxiliaryClass.listIsEmpty);
     }

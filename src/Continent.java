@@ -83,7 +83,7 @@ public class Continent {
             country.input(listOfCountries);
             listOfCountries.add(country);
         } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить ввод стран (y/n):"));
-
+        incrementTotalContinents();
     }
 
     public static void tableHeader() {
@@ -205,12 +205,18 @@ public class Continent {
         number = chooseCountry();
         Country.tableHeader();
         listOfCountries.get(number).output(0);
-        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данную страну из списка?"))
+        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данную страну из списка?")) {
             listOfCountries.remove(number);
+            Country.decrementTotalCountries();
+        }
     }
 
     public static void incrementTotalContinents() {
         totalContinents++;
+    }
+
+    public static void decrementTotalContinents() {
+        totalContinents--;
     }
 
     public static void printTotalContinents() {

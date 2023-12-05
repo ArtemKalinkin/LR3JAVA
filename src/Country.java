@@ -201,6 +201,7 @@ public class Country {
         } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить ввод субъектов (y/n):"));
         netProfitFromCompanies = calculateProfitFromCompanies().getValue();
         setAddressOfCompanies();
+        incrementTotalCountries();
     }
 
     public static void tableHeader() {
@@ -491,12 +492,18 @@ public class Country {
         number = chooseSubject();
         Subject.tableHeader();
         listOfSubjects.get(number).output(0);
-        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный субъект из списка?"))
+        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный субъект из списка?")) {
             listOfSubjects.remove(number);
+            Subject.decrementTotalSubjects();
+        }
     }
 
     public static void incrementTotalCountries() {
         totalCountries++;
+    }
+
+    public static void decrementTotalCountries() {
+        totalCountries--;
     }
 
     public static void printTotalCountries() {

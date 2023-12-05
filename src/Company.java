@@ -173,6 +173,7 @@ public class Company {
         netProfit = inputNetProfit();
         industry = inputIndustry();
         inputDateOfFoundation();
+        incrementTotalCompanies();
     }
 
     public static void tableHeader() {
@@ -252,7 +253,11 @@ public class Company {
         totalCompanies++;
     }
 
+    public static void decrementTotalCompanies() {
+        totalCompanies--;
+    }
+
     public static void printTotalCompanies() {
-        System.out.println("Всего вы внесли в список " + totalCompanies + " субъектов");
+        System.out.println("Всего вы внесли в список " + totalCompanies + " компаний");
     }
 }

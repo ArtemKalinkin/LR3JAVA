@@ -93,6 +93,7 @@ public class Subject {
             city.input(listOfCities);
             listOfCities.add(city);
         } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить ввод городов (y/n):"));
+        incrementTotalSubjects();
     }
 
     public static void tableHeader() {
@@ -218,12 +219,18 @@ public class Subject {
         number = chooseCity();
         City.tableHeader();
         listOfCities.get(number).output(0);
-        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный город из списка?"))
+        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный город из списка?")) {
             listOfCities.remove(number);
+            City.decrementTotalCities();
+        }
     }
 
     public static void incrementTotalSubjects() {
         totalSubjects++;
+    }
+
+    public static void decrementTotalSubjects() {
+        totalSubjects--;
     }
 
     public static void printTotalSubjects() {
