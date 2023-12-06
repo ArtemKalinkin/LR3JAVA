@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Subject {
     private String name;
@@ -8,6 +7,8 @@ public class Subject {
     private int population;
     private int square;
     private List<City> listOfCities = new ArrayList<>();
+
+    private static int totalSubjects = 0;
 
     public Subject() {
     }
@@ -64,71 +65,175 @@ public class Subject {
         return listOfCities;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Subject))
+            return false;
+        Subject subject = (Subject) object;
+        return this.name.equals(subject.getName());
+    }
 
-    public void input() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("ВВОД СУБЪЕКТА\n");
+    public void input(List<Subject> subjectList) {
+        boolean flag;
+        System.out.println("\nВВОД СУБЪЕКТА");
         do {
-            System.out.print("Введите название субъекта:");
-            while (!scanner.hasNextLine()) {
-                System.out.println("Ошибка ввода!\nВведите название субъекта: ");
-                scanner.next();
-            }
-            name = scanner.nextLine();
-            if (name.isBlank())
-                System.out.println("Данное поле не может быть пустым");
-        } while (name.isBlank());
-
-        do {
-            System.out.println("Введите население субъекта: ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Ошибка ввода!\nВведите название субъекта: ");
-                scanner.next();
-            }
-            population = scanner.nextInt();
-            if (population < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (population < 0);
-
-        do {
-            System.out.println("Введите площадь субъекта: ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Ошибка ввода!\nВведите площадь субъекта: ");
-                scanner.next();
-            }
-            square = scanner.nextInt();
-            if (square < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (square < 0);
-
-        do {
-            System.out.println("Введите количество городов: ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Ошибка ввода!\nВведите количество городов: ");
-                scanner.next();
-            }
-            numberOfCities = scanner.nextInt();
-            if (numberOfCities < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (numberOfCities < 0);
-
-        scanner.close();
-
+            flag = false;
+            name = AuxiliaryClass.inputNameOfSomething("субъекта");
+            for (Subject otherSubject : subjectList)
+                if ((this != otherSubject) && (this.equals(otherSubject))) {
+                    System.out.println("Данный субъект уже есть в списке");
+                    flag = true;
+                }
+        } while (flag);
+        numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
+        square = AuxiliaryClass.inputSquareOfSomething("субъекта");
+        population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
         do {
             City city = new City();
-            city.input();
+            city.input(listOfCities);
             listOfCities.add(city);
-        } while (AuxiliaryClass.answerYesOrNo("городов (y/n):"));
+        } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить ввод городов (y/n):"));
+        incrementTotalSubjects();
+    }
+
+    public static void tableHeader() {
+        System.out.print("*********************************************************" +
+                "********************************************************\n");
+        System.out.print("* Номер *       Субъект      * Количество городов * Площадь субъекта " +
+                "* Население *        Список городов        *\n");
+        System.out.print("*********************************************************" +
+                "********************************************************\n");
     }
 
     public void output(int number) {
         System.out.printf("* %-5d * %-18s * %-18d * ", number + 1, name, numberOfCities);
-        System.out.printf("%-16d * %-9d * %-28s *\n", square, population, listOfCities.getFirst());
+        if (listOfCities.isEmpty())
+            System.out.printf("%-16d * %-9d * %-28s *\n", square, population, AuxiliaryClass.listIsEmpty);
+        else
+            System.out.printf("%-16d * %-9d * %-28s *\n", square, population, listOfCities.get(0).getName());
         for (int i = 1; i < listOfCities.size(); i++) {
             System.out.printf("*       *                    *             " +
                     "       *                  *           * %-28s *\n", listOfCities.get(i).getName());
         }
         System.out.print("****************************************************************" +
                 "*************************************************\n");
+    }
+
+    public int chooseCity() {
+        int number = 0;
+        int i;
+        int size = listOfCities.size();
+        if (size != 0) {
+            City.tableHeader();
+            i = 0;
+            for (City city : listOfCities) {
+                city.output(i);
+                i++;
+            }
+            do {
+                System.out.print("Введите номер города: ");
+                number = Main.scanner.nextInt();
+                if ((number < 1) || (number > size))
+                    System.out.println("Города под данным номером нет в списке");
+            } while ((number < 1) || (number > size));
+            Main.scanner.nextLine();
+        }
+        return number - 1;
+    }
+
+    public void changeFields(List<Subject> subjectList) {
+        boolean flag;
+        int number;
+        System.out.println("\nИЗМЕНЕНИЯ ПОЛЕЙ");
+        tableHeader();
+        output(0);
+        do {
+            System.out.println("1.Название субъекта");
+            System.out.println("2.Количество городов");
+            System.out.println("3.Площадь субъекта");
+            System.out.println("4.Население субъекта");
+            System.out.println("5.Список городов");
+            do {
+                System.out.print("Введите номер поля, который желаете изменить: ");
+                number = Main.scanner.nextInt();
+                if ((number < 1) || (number > 5))
+                    System.out.println("Поля с данным номером нет");
+            } while ((number < 1) || (number > 5));
+            Main.scanner.nextLine();
+            switch (number) {
+                case 1:
+                    do {
+                        flag = false;
+                        name = AuxiliaryClass.inputNameOfSomething("субъекта");
+                        for (Subject otherSubject : subjectList)
+                            if ((this != otherSubject) && (this.equals(otherSubject))) {
+                                System.out.println("Данный субъект уже есть в списке");
+                                flag = true;
+                            }
+                    } while (flag);
+                    break;
+                case 2:
+                    numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
+                    break;
+                case 3:
+                    square = AuxiliaryClass.inputSquareOfSomething("субъекта");
+                    break;
+                case 4:
+                    population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
+                    break;
+                case 5:
+                    System.out.println("Для изменения списка городов перейдите по соответствующей команде в меню");
+                    break;
+                default:
+                    break;
+            }
+        } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить изменение полей в данном субъекте?"));
+
+    }
+
+    public void addNewCity() {
+        int number;
+        if (listOfCities.size() < numberOfCities) {
+            City city = new City();
+            city.input(listOfCities);
+            listOfCities.add(city);
+        } else {
+            System.out.println("Достигнуто количество городов соответствующее введенному числу - "
+                    + numberOfCities);
+            System.out.println("Для добавления новых городов в данный список вам необходимо изменить ");
+            System.out.println("число количества городов в данном субъекте");
+            if (AuxiliaryClass.answerYesOrNo("Желаете это сделать?")) {
+                do {
+                    number = AuxiliaryClass.inputNumberOfSomething("городов");
+                    if (number <= listOfCities.size())
+                        System.out.println("Данное число меньше или соответствует уже имеющемуся");
+                } while (number <= listOfCities.size());
+                numberOfCities = number;
+                addNewCity();
+            }
+        }
+    }
+
+    public void removeCityFromList() {
+        int number;
+        number = chooseCity();
+        City.tableHeader();
+        listOfCities.get(number).output(0);
+        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный город из списка?")) {
+            listOfCities.remove(number);
+            City.decrementTotalCities();
+        }
+    }
+
+    public static void incrementTotalSubjects() {
+        totalSubjects++;
+    }
+
+    public static void decrementTotalSubjects() {
+        totalSubjects--;
+    }
+
+    public static void printTotalSubjects() {
+        System.out.println("Всего вы внесли в список " + totalSubjects + " субъектов");
     }
 }

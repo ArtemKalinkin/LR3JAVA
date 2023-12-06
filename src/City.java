@@ -1,12 +1,14 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
 
 public class City {
     private String name;
     private int population;
-    private int numberOfEnterprises;
-    private List<Enterprise> listOfEnterprises = new ArrayList<>();
+    private int numberOfCompany;
+    private List<Company> listOfCompany = new ArrayList<>();
+
+    private static int totalCities = 0;
 
     public City() {
     }
@@ -15,11 +17,11 @@ public class City {
         this.name = name;
     }
 
-    public City(String name, int population, int numberOfEnterprises, List<Enterprise> listOfEnterprises) {
+    public City(String name, int population, int numberOfCompany, List<Company> listOfCompany) {
         this.name = name;
         this.population = population;
-        this.numberOfEnterprises = numberOfEnterprises;
-        this.listOfEnterprises = listOfEnterprises;
+        this.numberOfCompany = numberOfCompany;
+        this.listOfCompany = listOfCompany;
     }
 
     public void setName(String name) {
@@ -38,76 +40,190 @@ public class City {
         return population;
     }
 
-    public void setNumberOfEnterprises(int numberOfEnterprises) {
-        this.numberOfEnterprises = numberOfEnterprises;
+    public void setNumberOfCompany(int numberOfCompany) {
+        this.numberOfCompany = numberOfCompany;
     }
 
-    public int getNumberOfEnterprises() {
-        return numberOfEnterprises;
+    public int getNumberOfCompany() {
+        return numberOfCompany;
     }
 
-    public void setListOfEnterprises(List<Enterprise> listOfEnterprises) {
-        this.listOfEnterprises = listOfEnterprises;
+    public void setListOfCompany(List<Company> listOfCompany) {
+        this.listOfCompany = listOfCompany;
     }
 
-    public List<Enterprise> getListOfEnterprises() {
-        return listOfEnterprises;
+    public List<Company> getListOfCompany() {
+        return listOfCompany;
     }
 
-    public void input() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("ВВОД ГОРОДА\n");
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof City))
+            return false;
+        City city = (City) object;
+        return this.name.equals(city.getName());
+    }
+
+
+    public void input(List<City> cityList) {
+        boolean flag;
+        System.out.println("\nВВОД ГОРОДА");
+        do {
+            flag = false;
+            name = AuxiliaryClass.inputNameOfSomething("города");
+            for (City otherCity : cityList)
+                if ((this != otherCity) && (this.equals(otherCity))) {
+                    System.out.println("Данный город уже есть в списке");
+                    flag = true;
+                }
+        } while (flag);
+
+        population = AuxiliaryClass.inputPopulationOfSomething("города");
+        numberOfCompany = AuxiliaryClass.inputNumberOfSomething("компаний");
 
         do {
-            System.out.println("Введите название города: ");
-            while (!scanner.hasNextLine()) {
-                System.out.println("Ошибка ввода!\nВведите название города: ");
-                scanner.next();
-            }
-            name = scanner.nextLine();
-            if (name.isBlank())
-                System.out.println("Данное поле не может быть пустым");
-        } while (name.isBlank());
+            Company company = new Company();
+            company.input(listOfCompany);
+            listOfCompany.add(company);
+        } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить ввод компаний (y/n):"));
+        incrementTotalCities();
+    }
 
-        do {
-            System.out.println("Введите население города: ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Ошибка ввода!\nВведите название города: ");
-                scanner.next();
-            }
-            population = scanner.nextInt();
-            if (population < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (population < 0);
-
-        do {
-            System.out.println("Введите количество предприятий: ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Ошибка ввода!\nВведите количество предприятий: ");
-                scanner.next();
-            }
-            numberOfEnterprises = scanner.nextInt();
-            if (numberOfEnterprises < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (numberOfEnterprises < 0);
-
-        scanner.close();
-
-        do {
-            Enterprise enterprise = new Enterprise();
-            enterprise.input();
-            listOfEnterprises.add(enterprise);
-        } while (AuxiliaryClass.answerYesOrNo("предприятий (y/n):"));
+    public static void tableHeader() {
+        System.out.print("**************************************************" +
+                "********************************************************\n");
+        System.out.print("* Номер *       Город        *  Количество компаний   " +
+                "* Население *           Список компаний            *\n");
+        System.out.print("**************************************************" +
+                "********************************************************\n");
     }
 
     public void output(int number) {
-        System.out.printf("* %-5d * %-18s * %-22d * %-9d * ", number + 1, name, numberOfEnterprises, population);
-        System.out.printf("%-36s *\n", listOfEnterprises.getFirst());
-        for (int i = 1; i < listOfEnterprises.size(); i++) {
+        System.out.printf("* %-5d * %-18s * %-22d * %-9d * ", number + 1, name, numberOfCompany, population);
+        if (listOfCompany.isEmpty())
+            System.out.printf("%-36s *\n", AuxiliaryClass.listIsEmpty);
+        else
+            System.out.printf("%-36s *\n", listOfCompany.get(0).getName());
+        for (int i = 1; i < listOfCompany.size(); i++) {
             System.out.printf("*       *                    *                        *           * %-36s *\n",
-                    listOfEnterprises.get(i).getName());
+                    listOfCompany.get(i).getName());
         }
         System.out.print("*******************************************************" +
                 "***************************************************\n");
     }
+
+    public int chooseCompany() {
+        int number = 0;
+        int i;
+        int size = listOfCompany.size();
+        if (size != 0) {
+            Company.tableHeader();
+            i = 0;
+            for (Company company : listOfCompany) {
+                company.output(i);
+                i++;
+            }
+            do {
+                System.out.print("Введите номер компании: ");
+                number = Main.scanner.nextInt();
+                if ((number < 1) || (number > size))
+                    System.out.println("Компании под данным номером нет в списке");
+            } while ((number < 1) || (number > size));
+            Main.scanner.nextLine();
+        }
+        return number - 1;
+    }
+
+    public void changeFields(List<City> cityList) {
+        boolean flag;
+        int number;
+        System.out.println("\nИЗМЕНЕНИЯ ПОЛЕЙ");
+        tableHeader();
+        output(0);
+        do {
+            System.out.println("1.Название города");
+            System.out.println("2.Количество компаний");
+            System.out.println("3.Население города");
+            System.out.println("4.Список компаний");
+            do {
+                System.out.print("Введите номер поля, который желаете изменить: ");
+                number = Main.scanner.nextInt();
+                if ((number < 1) || (number > 4))
+                    System.out.println("Поля с данным номером нет");
+            } while ((number < 1) || (number > 4));
+            Main.scanner.nextLine();
+            switch (number) {
+                case 1:
+                    do {
+                        flag = false;
+                        name = AuxiliaryClass.inputNameOfSomething("города");
+                        for (City otherCity : cityList)
+                            if ((this != otherCity) && (this.equals(otherCity))) {
+                                System.out.println("Данный город уже есть в списке");
+                                flag = true;
+                            }
+                    } while (flag);
+                    break;
+                case 2:
+                    numberOfCompany = AuxiliaryClass.inputNumberOfSomething("компании");
+                    break;
+                case 3:
+                    population = AuxiliaryClass.inputPopulationOfSomething("города");
+                    break;
+                case 4:
+                    System.out.println("Для изменения списка компаний перейдите по соответствующей команде в меню");
+                    break;
+                default:
+                    break;
+            }
+        } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить изменение полей в данном городе?"));
+    }
+
+    public void addNewCompany() {
+        int number;
+        if (listOfCompany.size() < numberOfCompany) {
+            Company company = new Company();
+            company.input(listOfCompany);
+            listOfCompany.add(company);
+        } else {
+            System.out.println("Достигнуто количество компаний соответствующее введенному числу - "
+                    + numberOfCompany);
+            System.out.println("Для добавления новых компаний в данный список вам необходимо изменить ");
+            System.out.println("число количества компаний в данном субъекте");
+            if (AuxiliaryClass.answerYesOrNo("Желаете это сделать?")) {
+                do {
+                    number = AuxiliaryClass.inputNumberOfSomething("компаний");
+                    if (number <= listOfCompany.size())
+                        System.out.println("Данное число меньше или соответствует уже имеющемуся");
+                } while (number <= listOfCompany.size());
+                numberOfCompany = number;
+                addNewCompany();
+            }
+        }
+    }
+
+    public void removeCompanyFromList() {
+        int number;
+        number = chooseCompany();
+        Company.tableHeader();
+        listOfCompany.get(number).output(0);
+        if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данное компанию из списка?")) {
+            listOfCompany.remove(number);
+            Company.decrementTotalCompanies();
+        }
+    }
+
+    public static void incrementTotalCities() {
+        totalCities++;
+    }
+
+    public static void decrementTotalCities() {
+        totalCities--;
+    }
+
+    public static void printTotalCities() {
+        System.out.println("Всего вы внесли в список " + totalCities + " городов");
+    }
+
 }
+
