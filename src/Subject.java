@@ -67,9 +67,8 @@ public class Subject {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Subject))
+        if (!(object instanceof Subject subject))
             return false;
-        Subject subject = (Subject) object;
         return this.name.equals(subject.getName());
     }
 
@@ -161,7 +160,7 @@ public class Subject {
             } while ((number < 1) || (number > 5));
             Main.scanner.nextLine();
             switch (number) {
-                case 1:
+                case 1 -> {
                     do {
                         flag = false;
                         name = AuxiliaryClass.inputNameOfSomething("субъекта");
@@ -171,21 +170,14 @@ public class Subject {
                                 flag = true;
                             }
                     } while (flag);
-                    break;
-                case 2:
-                    numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
-                    break;
-                case 3:
-                    square = AuxiliaryClass.inputSquareOfSomething("субъекта");
-                    break;
-                case 4:
-                    population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
-                    break;
-                case 5:
-                    System.out.println("Для изменения списка городов перейдите по соответствующей команде в меню");
-                    break;
-                default:
-                    break;
+                }
+                case 2 -> numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
+                case 3 -> square = AuxiliaryClass.inputSquareOfSomething("субъекта");
+                case 4 -> population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
+                case 5 ->
+                        System.out.println("Для изменения списка городов перейдите по соответствующей команде в меню");
+                default -> {
+                }
             }
         } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить изменение полей в данном субъекте?"));
 

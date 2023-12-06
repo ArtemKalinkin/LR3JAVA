@@ -112,9 +112,8 @@ public class Country {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Country))
+        if (!(object instanceof Country country))
             return false;
-        Country country = (Country) object;
         return this.name.equals(country.getName());
     }
 
@@ -275,23 +274,13 @@ public class Country {
         if ((this.expenses == 0) || (secondCountry.expenses == 0))
             flag = 5;
         switch (flag) {
-            case 1:
-                System.out.println("Площадь одной из стран записана некорректно и равна 0");
-                break;
-            case 2:
-                System.out.println("Население одной из стран записано некорректно и равно 0");
-                break;
-            case 3:
-                System.out.println("Прибыль от компаний одной из стран записана некорректно и равна 0");
-                break;
-            case 4:
-                System.out.println("Доход одной из стран записан некорректно и равен 0");
-                break;
-            case 5:
-                System.out.println("Расходы одной из стран записаны некорректно и равны 0");
-                break;
-            default:
-                break;
+            case 1 -> System.out.println("Площадь одной из стран записана некорректно и равна 0");
+            case 2 -> System.out.println("Население одной из стран записано некорректно и равно 0");
+            case 3 -> System.out.println("Прибыль от компаний одной из стран записана некорректно и равна 0");
+            case 4 -> System.out.println("Доход одной из стран записан некорректно и равен 0");
+            case 5 -> System.out.println("Расходы одной из стран записаны некорректно и равны 0");
+            default -> {
+            }
         }
         if (flag == 0) {
             System.out.println("\nПроцентное соотношение характеристик стран");
@@ -325,7 +314,7 @@ public class Country {
                         secondCountry.name, this.name, percentageOfPopulation);
                 numberTwo++;
             } else
-                System.out.printf("Население стран равно");
+                System.out.print("Население стран равно");
             //Прибыль компании
             if (this.netProfitFromCompanies > secondCountry.netProfitFromCompanies) {
                 percentageOfProfits = AuxiliaryClass.calculateByPercentFirstNumberIsGreaterThanSecond(
@@ -400,7 +389,7 @@ public class Country {
             } while ((number < 1) || (number > 9));
             Main.scanner.nextLine();
             switch (number) {
-                case 1:
+                case 1 -> {
                     do {
                         flag = false;
                         name = AuxiliaryClass.inputNameOfSomething("страны");
@@ -411,22 +400,16 @@ public class Country {
                             }
                     } while (flag);
                     setAddressOfCompanies();
-                    break;
-                case 2:
-                    numberOfSubjects = AuxiliaryClass.inputNumberOfSomething("субъектов");
-                    break;
-                case 3:
-                    square = AuxiliaryClass.inputSquareOfSomething("страны");
-                    break;
-                case 4:
-                    population = AuxiliaryClass.inputPopulationOfSomething("страны");
-                    break;
-                case 5:
+                }
+                case 2 -> numberOfSubjects = AuxiliaryClass.inputNumberOfSomething("субъектов");
+                case 3 -> square = AuxiliaryClass.inputSquareOfSomething("страны");
+                case 4 -> population = AuxiliaryClass.inputPopulationOfSomething("страны");
+                case 5 -> {
                     System.out.println("Данное поле рассчитывается автоматически и его нельзя изменить");
                     System.out.println("Для его изменения вам необходимо совершить корректировку ");
                     System.out.println("в компаниях относящихся к данной стране в поле \"Прибыль\"");
-                    break;
-                case 6:
+                }
+                case 6 -> {
                     do {
                         System.out.print("Введите доход страны: ");
                         while (!Main.scanner.hasNextInt()) {
@@ -437,8 +420,8 @@ public class Country {
                         if (income < 0)
                             System.out.println("Данное поле не может быть отрицательным!");
                     } while (income < 0);
-                    break;
-                case 7:
+                }
+                case 7 -> {
                     do {
                         System.out.print("Введите расходы страны: ");
                         while (!Main.scanner.hasNextInt()) {
@@ -449,17 +432,16 @@ public class Country {
                         if (expenses < 0)
                             System.out.println("Данное поле не может быть отрицательным!");
                     } while (expenses < 0);
-                    break;
-                case 8:
+                }
+                case 8 -> {
                     System.out.println("Данное поле рассчитывается автоматически и его нельзя изменить");
                     System.out.println("Для его изменения вам необходимо совершить корректировку ");
                     System.out.println("в поле \"Доходы\" или \"Расходы\"");
-                    break;
-                case 9:
-                    System.out.println("Для изменения списка субъектов перейдите по соответствующей команде в меню");
-                    break;
-                default:
-                    break;
+                }
+                case 9 ->
+                        System.out.println("Для изменения списка субъектов перейдите по соответствующей команде в меню");
+                default -> {
+                }
             }
         } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить изменение полей в данной стране?"));
     }

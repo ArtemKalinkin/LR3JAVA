@@ -23,18 +23,24 @@ public class AuxiliaryClass {
         do {
             System.out.println(s);
             answer = Main.scanner.nextLine();
-            if ((answer.equals("No")) || (answer.equals("n")) || (answer.equals("N")) || (answer.equals("no"))) {
-                return false;
-            } else if ((answer.equals("Нет")) || (answer.equals("нет"))) {
-                return false;
-            } else if ((answer.equals("yes")) || (answer.equals("y")) || (answer.equals("Y")) || (answer.equals("Yes"))) {
-                return true;
-            } else if ((answer.equals("Да")) || (answer.equals("да"))) {
-                return true;
-            } else {
-                System.out.println("Некорректный ответ!");
-                System.out.println("Варианты положительных ответов: Да, да, Yes, yes, Y, y");
-                System.out.println("Варианты отрицательных ответов: Нет, нет, No, no, N, n");
+            switch (answer) {
+                case "No", "n", "N", "no" -> {
+                    return false;
+                }
+                case "Нет", "нет" -> {
+                    return false;
+                }
+                case "yes", "y", "Y", "Yes" -> {
+                    return true;
+                }
+                case "Да", "да" -> {
+                    return true;
+                }
+                default -> {
+                    System.out.println("Некорректный ответ!");
+                    System.out.println("Варианты положительных ответов: Да, да, Yes, yes, Y, y");
+                    System.out.println("Варианты отрицательных ответов: Нет, нет, No, no, N, n");
+                }
             }
         } while (true);
     }
@@ -184,7 +190,7 @@ public class AuxiliaryClass {
         List<City> cities;
         List<Company> companies;
         switch (number) {
-            case 1:
+            case 1 -> {
                 if (continentList.isEmpty())
                     System.out.println("\n\n" + listIsEmpty);
                 Continent.tableHeader();
@@ -192,8 +198,8 @@ public class AuxiliaryClass {
                     continent.output(i);
                     i++;
                 }
-                break;
-            case 2:
+            }
+            case 2 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 if (numberOfContinent == -1) {
                     System.out.println(AuxiliaryClass.listIsEmpty);
@@ -205,8 +211,8 @@ public class AuxiliaryClass {
                     country.output(i);
                     i++;
                 }
-                break;
-            case 3:
+            }
+            case 3 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 if (numberOfContinent == -1) {
                     System.out.println(AuxiliaryClass.listIsEmpty);
@@ -224,8 +230,8 @@ public class AuxiliaryClass {
                     subject.output(i);
                     i++;
                 }
-                break;
-            case 4:
+            }
+            case 4 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 if (numberOfContinent == -1) {
                     System.out.println(AuxiliaryClass.listIsEmpty);
@@ -249,8 +255,8 @@ public class AuxiliaryClass {
                     city.output(i);
                     i++;
                 }
-                break;
-            case 5:
+            }
+            case 5 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 if (numberOfContinent == -1) {
                     System.out.println(AuxiliaryClass.listIsEmpty);
@@ -280,10 +286,9 @@ public class AuxiliaryClass {
                     company.output(i);
                     i++;
                 }
-                break;
-            default:
-                break;
-
+            }
+            default -> {
+            }
         }
     }
 
@@ -380,11 +385,11 @@ public class AuxiliaryClass {
         } while ((number > 5) || (number < 1));
         Main.scanner.nextLine();
         switch (number) {
-            case 1:
+            case 1 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 continentList.get(numberOfContinent).changeFields(continentList);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 countries = continentList.get(numberOfContinent).getListOfCountries();
                 numberOfCountry = continentList.get(numberOfContinent).chooseCountry();
@@ -394,8 +399,8 @@ public class AuxiliaryClass {
                 }
                 countries.get(numberOfCountry).changeFields(countries);
                 countries.get(numberOfCountry).setAddressOfCompanies();
-                break;
-            case 3:
+            }
+            case 3 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 countries = continentList.get(numberOfContinent).getListOfCountries();
                 numberOfCountry = continentList.get(numberOfContinent).chooseCountry();
@@ -411,8 +416,8 @@ public class AuxiliaryClass {
                 }
                 subjects.get(numberOfSubject).changeFields(subjects);
                 countries.get(numberOfCountry).setAddressOfCompanies();
-                break;
-            case 4:
+            }
+            case 4 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 countries = continentList.get(numberOfContinent).getListOfCountries();
                 numberOfCountry = continentList.get(numberOfContinent).chooseCountry();
@@ -434,8 +439,8 @@ public class AuxiliaryClass {
                 }
                 cities.get(numberOfCity).changeFields(cities);
                 countries.get(numberOfCountry).setAddressOfCompanies();
-                break;
-            case 5:
+            }
+            case 5 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 countries = continentList.get(numberOfContinent).getListOfCountries();
                 numberOfCountry = continentList.get(numberOfContinent).chooseCountry();
@@ -464,9 +469,9 @@ public class AuxiliaryClass {
                 companies.get(numberOfCompany).changeFields(companies);
                 countries.get(numberOfCountry).setNetProfitFromCompanies(
                         countries.get(numberOfCountry).calculateProfitFromCompanies().getValue());
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
     }
 
@@ -498,7 +503,7 @@ public class AuxiliaryClass {
         } while ((number > 5) || (number < 1));
         Main.scanner.nextLine();
         switch (number) {
-            case 1:
+            case 1 -> {
                 if (mode)
                     do {
                         addNewContinent(continentList);
@@ -511,8 +516,8 @@ public class AuxiliaryClass {
                         if (continentList.isEmpty())
                             System.out.println("Вы удалили все континенты");
                     } while ((!continentList.isEmpty()) & (answerYesOrNo("Желаете удалить еще один континент?")));
-                break;
-            case 2:
+            }
+            case 2 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 if (mode)
                     do {
@@ -523,8 +528,8 @@ public class AuxiliaryClass {
                         continentList.get(numberOfContinent).removeCountryFromList();
                     } while ((!continentList.get(numberOfContinent).getListOfCountries().isEmpty())
                             & (answerYesOrNo("Желаете удалить еще одну страну?")));
-                break;
-            case 3:
+            }
+            case 3 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 countries = continentList.get(numberOfContinent).getListOfCountries();
                 numberOfCountry = continentList.get(numberOfContinent).chooseCountry();
@@ -545,8 +550,8 @@ public class AuxiliaryClass {
                     } while ((!countries.get(numberOfCountry).getListOfSubjects().isEmpty())
                             & (answerYesOrNo("Желаете удалить еще один субъект?")));
                 }
-                break;
-            case 4:
+            }
+            case 4 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 countries = continentList.get(numberOfContinent).getListOfCountries();
                 numberOfCountry = continentList.get(numberOfContinent).chooseCountry();
@@ -573,8 +578,8 @@ public class AuxiliaryClass {
                     } while ((!subjects.get(numberOfSubject).getListOfCities().isEmpty())
                             & (answerYesOrNo("Желаете удалить еще один город?")));
                 }
-                break;
-            case 5:
+            }
+            case 5 -> {
                 numberOfContinent = AuxiliaryClass.chooseContinent(continentList);
                 countries = continentList.get(numberOfContinent).getListOfCountries();
                 numberOfCountry = continentList.get(numberOfContinent).chooseCountry();
@@ -609,9 +614,9 @@ public class AuxiliaryClass {
                 }
                 countries.get(numberOfCountry).setNetProfitFromCompanies(
                         countries.get(numberOfCountry).calculateProfitFromCompanies().getValue());
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
     }
 

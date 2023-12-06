@@ -58,9 +58,8 @@ public class City {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof City))
+        if (!(object instanceof City city))
             return false;
-        City city = (City) object;
         return this.name.equals(city.getName());
     }
 
@@ -153,7 +152,7 @@ public class City {
             } while ((number < 1) || (number > 4));
             Main.scanner.nextLine();
             switch (number) {
-                case 1:
+                case 1 -> {
                     do {
                         flag = false;
                         name = AuxiliaryClass.inputNameOfSomething("города");
@@ -163,18 +162,13 @@ public class City {
                                 flag = true;
                             }
                     } while (flag);
-                    break;
-                case 2:
-                    numberOfCompany = AuxiliaryClass.inputNumberOfSomething("компании");
-                    break;
-                case 3:
-                    population = AuxiliaryClass.inputPopulationOfSomething("города");
-                    break;
-                case 4:
-                    System.out.println("Для изменения списка компаний перейдите по соответствующей команде в меню");
-                    break;
-                default:
-                    break;
+                }
+                case 2 -> numberOfCompany = AuxiliaryClass.inputNumberOfSomething("компании");
+                case 3 -> population = AuxiliaryClass.inputPopulationOfSomething("города");
+                case 4 ->
+                        System.out.println("Для изменения списка компаний перейдите по соответствующей команде в меню");
+                default -> {
+                }
             }
         } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить изменение полей в данном городе?"));
     }

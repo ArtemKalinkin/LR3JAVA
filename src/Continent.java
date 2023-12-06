@@ -57,9 +57,8 @@ public class Continent {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Continent))
+        if (!(object instanceof Continent continent))
             return false;
-        Continent continent = (Continent) object;
         return this.name.equals(continent.getName());
     }
 
@@ -150,7 +149,7 @@ public class Continent {
             } while ((number < 1) || (number > 4));
             Main.scanner.nextLine();
             switch (number) {
-                case 1:
+                case 1 -> {
                     do {
                         flag = false;
                         name = AuxiliaryClass.inputNameOfSomething("страны");
@@ -160,18 +159,12 @@ public class Continent {
                                 flag = true;
                             }
                     } while (flag);
-                    break;
-                case 2:
-                    numberOfCountries = AuxiliaryClass.inputNumberOfSomething("стран");
-                    break;
-                case 3:
-                    square = AuxiliaryClass.inputSquareOfSomething("континента");
-                    break;
-                case 4:
-                    System.out.println("Для изменения списка стран перейдите по соответствующей команде в меню");
-                    break;
-                default:
-                    break;
+                }
+                case 2 -> numberOfCountries = AuxiliaryClass.inputNumberOfSomething("стран");
+                case 3 -> square = AuxiliaryClass.inputSquareOfSomething("континента");
+                case 4 -> System.out.println("Для изменения списка стран перейдите по соответствующей команде в меню");
+                default -> {
+                }
             }
         } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить изменение полей в данном континенте?"));
     }

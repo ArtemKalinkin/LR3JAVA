@@ -80,9 +80,8 @@ public class Company {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Company))
+        if (!(object instanceof Company company))
             return false;
-        Company company = (Company) object;
         return this.name.equals(company.getName());
     }
 
@@ -215,7 +214,7 @@ public class Company {
             } while ((number < 1) || (number > 6));
             Main.scanner.nextLine();
             switch (number) {
-                case 1:
+                case 1 -> {
                     do {
                         flag = false;
                         name = AuxiliaryClass.inputNameOfSomething("компании");
@@ -225,26 +224,18 @@ public class Company {
                                 flag = true;
                             }
                     } while (flag);
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     System.out.println("Данное поле заполняется автоматически и его нельзя изменить");
                     System.out.println("Для его изменения вам необходимо совершить корректировку в стране, субъекте");
                     System.out.println("и городе, которые относятся к данному предприятию в полях \"Название\"");
-                    break;
-                case 3:
-                    turnoverPerYear = inputTurnover();
-                    break;
-                case 4:
-                    netProfit = inputNetProfit();
-                    break;
-                case 5:
-                    industry = inputIndustry();
-                    break;
-                case 6:
-                    inputDateOfFoundation();
-                    break;
-                default:
-                    break;
+                }
+                case 3 -> turnoverPerYear = inputTurnover();
+                case 4 -> netProfit = inputNetProfit();
+                case 5 -> industry = inputIndustry();
+                case 6 -> inputDateOfFoundation();
+                default -> {
+                }
             }
         } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить изменение полей в данном компании?"));
     }

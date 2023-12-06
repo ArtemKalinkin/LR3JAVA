@@ -40,35 +40,24 @@ public class Main {
                     numberOfMenu = Main.scanner.nextInt();
                 } while ((numberOfMenu < 1) || (numberOfMenu > 7));
                 switch (numberOfMenu) {
-                    case 1:
+                    case 1 -> {
                         number = AuxiliaryClass.menuOutput();
                         AuxiliaryClass.outputAll(listOfContinents, number);
-                        break;
-                    case 2:
-                        AuxiliaryClass.compareTwoCountries(listOfContinents);
-                        break;
-                    case 3:
-                        AuxiliaryClass.changeFieldsOfSomething(listOfContinents);
-                        break;
-                    case 4:
-                        AuxiliaryClass.addOrRemoveSomething(listOfContinents, false);
-                        break;
-                    case 5:
-                        AuxiliaryClass.addOrRemoveSomething(listOfContinents, true);
-                        break;
-                    case 6:
-                        AuxiliaryClass.printInfoOfTotalElements();
-                        break;
-                    case 7:
+                    }
+                    case 2 -> AuxiliaryClass.compareTwoCountries(listOfContinents);
+                    case 3 -> AuxiliaryClass.changeFieldsOfSomething(listOfContinents);
+                    case 4 -> AuxiliaryClass.addOrRemoveSomething(listOfContinents, false);
+                    case 5 -> AuxiliaryClass.addOrRemoveSomething(listOfContinents, true);
+                    case 6 -> AuxiliaryClass.printInfoOfTotalElements();
+                    case 7 -> {
                         if (!AuxiliaryClass.answerYesOrNo("Вы действительно желаете завершить работу?"))
                             numberOfMenu = 0;
-                        break;
-
-                    default:
-                        break;
+                    }
+                    default -> {
+                    }
                 }
             }
-        } while (numberOfMenu != 6);
+        } while (numberOfMenu != 7);
         scanner.close();
     }
 
