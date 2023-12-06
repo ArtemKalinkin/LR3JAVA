@@ -120,16 +120,14 @@ public class Country {
 
     public long inputIncome() {
         long income;
-        do {
-            System.out.print("Введите доход страны: ");
-            while (!Main.scanner.hasNextLong()) {
-                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите доход страны: ");
-                Main.scanner.next();
-            }
-            income = Main.scanner.nextLong();
-            if (income < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (income < 0);
+        System.out.print("Введите доход страны: ");
+        while (!Main.scanner.hasNextLong()) {
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите доход страны: ");
+            Main.scanner.next();
+        }
+        income = Main.scanner.nextLong();
+        if (income < 0)
+            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
 
         Main.scanner.nextLine();
         return income;
@@ -137,16 +135,14 @@ public class Country {
 
     public long inputExpenses() {
         long expenses;
-        do {
-            System.out.print("Введите расходы страны: ");
-            while (!Main.scanner.hasNextLong()) {
-                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите расходы страны: ");
-                Main.scanner.next();
-            }
-            expenses = Main.scanner.nextLong();
-            if (expenses < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (expenses < 0);
+        System.out.print("Введите расходы страны: ");
+        while (!Main.scanner.hasNextLong()) {
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите расходы страны: ");
+            Main.scanner.next();
+        }
+        expenses = Main.scanner.nextLong();
+        if (expenses < 0)
+            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
 
         Main.scanner.nextLine();
         return expenses;
@@ -180,18 +176,57 @@ public class Country {
         System.out.println("\nВВОД СТРАНЫ");
         do {
             flag = false;
-            name = AuxiliaryClass.inputNameOfSomething("страны");
+            try {
+                name = AuxiliaryClass.inputNameOfSomething("страны");
+            } catch (StringWithSmallLetterException e) {
+                System.out.println("Название страны необходимо писать с заглавной буквы!");
+            }
             for (Country otherCountry : countryList)
                 if ((this != otherCountry) && (this.equals(otherCountry))) {
                     System.out.println("Данная страна уже есть в списке");
                     flag = true;
                 }
         } while (flag);
-        numberOfSubjects = AuxiliaryClass.inputNumberOfSomething("субъектов");
-        square = AuxiliaryClass.inputSquareOfSomething("страны");
-        population = AuxiliaryClass.inputPopulationOfSomething("страны");
-        income = inputIncome();
-        expenses = inputExpenses();
+        do {
+            try {
+                numberOfSubjects = AuxiliaryClass.inputNumberOfSomething("субъектов");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Количество субъектов не может быть отрицательным!");
+            }
+        } while (true);
+        do {
+            try {
+                square = AuxiliaryClass.inputSquareOfSomething("страны");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Площадь страны не может быть отрицательной!");
+            }
+        } while (true);
+        do {
+            try {
+                population = AuxiliaryClass.inputPopulationOfSomething("страны");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Население страны не может быть отрицательным!");
+            }
+        } while (true);
+        do {
+            try {
+                income = inputIncome();
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Доходы страны не могут быть отрицательными!");
+            }
+        } while (true);
+        do {
+            try {
+                expenses = inputExpenses();
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Расходы страны не могут быть отрицательными!");
+            }
+        } while (true);
         budgetDeficitOrSurplus = income - expenses;
         do {
             Subject subject = new Subject();
@@ -392,7 +427,14 @@ public class Country {
                 case 1 -> {
                     do {
                         flag = false;
-                        name = AuxiliaryClass.inputNameOfSomething("страны");
+                        do {
+                            try {
+                                name = AuxiliaryClass.inputNameOfSomething("страны");
+                                break;
+                            } catch (StringWithSmallLetterException e) {
+                                System.out.println("Название страны необходимо писать с заглавной буквы!");
+                            }
+                        } while (true);
                         for (Country otherCountry : countryList)
                             if ((this != otherCountry) && (this.equals(otherCountry))) {
                                 System.out.println("Данная страна уже есть в списке");
@@ -401,9 +443,36 @@ public class Country {
                     } while (flag);
                     setAddressOfCompanies();
                 }
-                case 2 -> numberOfSubjects = AuxiliaryClass.inputNumberOfSomething("субъектов");
-                case 3 -> square = AuxiliaryClass.inputSquareOfSomething("страны");
-                case 4 -> population = AuxiliaryClass.inputPopulationOfSomething("страны");
+                case 2 -> {
+                    do {
+                        try {
+                            numberOfSubjects = AuxiliaryClass.inputNumberOfSomething("субъектов");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Количество субъектов не может быть отрицательным!");
+                        }
+                    } while (true);
+                }
+                case 3 -> {
+                    do {
+                        try {
+                            square = AuxiliaryClass.inputSquareOfSomething("страны");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Площадь страны не может быть отрицательной!");
+                        }
+                    } while (true);
+                }
+                case 4 -> {
+                    do {
+                        try {
+                            population = AuxiliaryClass.inputPopulationOfSomething("страны");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Население страны не может быть отрицательным!");
+                        }
+                    } while (true);
+                }
                 case 5 -> {
                     System.out.println("Данное поле рассчитывается автоматически и его нельзя изменить");
                     System.out.println("Для его изменения вам необходимо совершить корректировку ");
@@ -411,27 +480,23 @@ public class Country {
                 }
                 case 6 -> {
                     do {
-                        System.out.print("Введите доход страны: ");
-                        while (!Main.scanner.hasNextInt()) {
-                            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите доход страны: ");
-                            Main.scanner.next();
+                        try {
+                            income = inputIncome();
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Доходы страны не могут быть отрицательными!");
                         }
-                        income = Main.scanner.nextInt();
-                        if (income < 0)
-                            System.out.println("Данное поле не может быть отрицательным!");
-                    } while (income < 0);
+                    } while (true);
                 }
                 case 7 -> {
                     do {
-                        System.out.print("Введите расходы страны: ");
-                        while (!Main.scanner.hasNextInt()) {
-                            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите расходы страны: ");
-                            Main.scanner.next();
+                        try {
+                            expenses = inputExpenses();
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Расходы страны не могут быть отрицательными!");
                         }
-                        expenses = Main.scanner.nextInt();
-                        if (expenses < 0)
-                            System.out.println("Данное поле не может быть отрицательным!");
-                    } while (expenses < 0);
+                    } while (true);
                 }
                 case 8 -> {
                     System.out.println("Данное поле рассчитывается автоматически и его нельзя изменить");

@@ -24,16 +24,10 @@ public class AuxiliaryClass {
             System.out.println(s);
             answer = Main.scanner.nextLine();
             switch (answer) {
-                case "No", "n", "N", "no" -> {
+                case "No", "n", "N", "no", "Нет", "нет" -> {
                     return false;
                 }
-                case "Нет", "нет" -> {
-                    return false;
-                }
-                case "yes", "y", "Y", "Yes" -> {
-                    return true;
-                }
-                case "Да", "да" -> {
+                case "yes", "y", "Y", "Yes", "Да", "да" -> {
                     return true;
                 }
                 default -> {
@@ -45,7 +39,7 @@ public class AuxiliaryClass {
         } while (true);
     }
 
-    public static String inputNameOfSomething(String s) {
+    public static String inputNameOfSomething(String s) throws StringWithSmallLetterException {
         String name;
         do {
             System.out.print("Введите название " + s + ": ");
@@ -54,6 +48,8 @@ public class AuxiliaryClass {
                 Main.scanner.next();
             }
             name = Main.scanner.nextLine();
+            if (!Character.isWhitespace(name.charAt(0)))
+                throw new StringWithSmallLetterException("Ошибка! Строка начинается не с заглавной буквы!");
             if (name.isBlank())
                 System.out.println("Данное поле не может быть пустым");
         } while (name.isBlank());
@@ -63,33 +59,28 @@ public class AuxiliaryClass {
 
     public static int inputNumberOfSomething(String s) {
         int number;
-        do {
-            System.out.print("Введите количество " + s + ": ");
-            while (!Main.scanner.hasNextInt()) {
-                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите количество " + s + ": ");
-                Main.scanner.next();
-            }
-            number = Main.scanner.nextInt();
-            if (number < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (number < 0);
-
+        System.out.print("Введите количество " + s + ": ");
+        while (!Main.scanner.hasNextInt()) {
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите количество " + s + ": ");
+            Main.scanner.next();
+        }
+        number = Main.scanner.nextInt();
+        if (number < 0)
+            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
         Main.scanner.nextLine();
         return number;
     }
 
     public static int inputSquareOfSomething(String s) {
         int square;
-        do {
-            System.out.print("Введите площадь " + s + ": ");
-            while (!Main.scanner.hasNextInt()) {
-                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите площадь " + s + ": ");
-                Main.scanner.next();
-            }
-            square = Main.scanner.nextInt();
-            if (square < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (square < 0);
+        System.out.print("Введите площадь " + s + ": ");
+        while (!Main.scanner.hasNextInt()) {
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите площадь " + s + ": ");
+            Main.scanner.next();
+        }
+        square = Main.scanner.nextInt();
+        if (square < 0)
+            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
 
         Main.scanner.nextLine();
         return square;
@@ -97,16 +88,14 @@ public class AuxiliaryClass {
 
     public static int inputPopulationOfSomething(String s) {
         int population;
-        do {
-            System.out.print("Введите население " + s + ": ");
-            while (!Main.scanner.hasNextInt()) {
-                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите население " + s + ": ");
-                Main.scanner.next();
-            }
-            population = Main.scanner.nextInt();
-            if (population < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (population < 0);
+        System.out.print("Введите население " + s + ": ");
+        while (!Main.scanner.hasNextInt()) {
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите население " + s + ": ");
+            Main.scanner.next();
+        }
+        population = Main.scanner.nextInt();
+        if (population < 0)
+            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
 
         Main.scanner.nextLine();
         return population;

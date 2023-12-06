@@ -77,16 +77,44 @@ public class Subject {
         System.out.println("\nВВОД СУБЪЕКТА");
         do {
             flag = false;
-            name = AuxiliaryClass.inputNameOfSomething("субъекта");
+            do {
+                try {
+                    name = AuxiliaryClass.inputNameOfSomething("субъекта");
+                    break;
+                } catch (StringWithSmallLetterException e) {
+                    System.out.println("Название субъекта необходимо писать с заглавной буквы!");
+                }
+            } while (true);
             for (Subject otherSubject : subjectList)
                 if ((this != otherSubject) && (this.equals(otherSubject))) {
                     System.out.println("Данный субъект уже есть в списке");
                     flag = true;
                 }
         } while (flag);
-        numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
-        square = AuxiliaryClass.inputSquareOfSomething("субъекта");
-        population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
+        do {
+            try {
+                numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Количество городов не может быть отрицательным!");
+            }
+        } while (true);
+        do {
+            try {
+                square = AuxiliaryClass.inputSquareOfSomething("субъекта");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Площадь субъекта не может быть отрицательной!");
+            }
+        } while (true);
+        do {
+            try {
+                population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Население субъекта не может быть отрицательным!");
+            }
+        } while (true);
         do {
             City city = new City();
             city.input(listOfCities);
@@ -163,7 +191,14 @@ public class Subject {
                 case 1 -> {
                     do {
                         flag = false;
-                        name = AuxiliaryClass.inputNameOfSomething("субъекта");
+                        do {
+                            try {
+                                name = AuxiliaryClass.inputNameOfSomething("субъекта");
+                                break;
+                            } catch (StringWithSmallLetterException e) {
+                                System.out.println("Название субъекта необходимо писать с заглавной буквы!");
+                            }
+                        } while (true);
                         for (Subject otherSubject : subjectList)
                             if ((this != otherSubject) && (this.equals(otherSubject))) {
                                 System.out.println("Данный субъект уже есть в списке");
@@ -171,9 +206,36 @@ public class Subject {
                             }
                     } while (flag);
                 }
-                case 2 -> numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
-                case 3 -> square = AuxiliaryClass.inputSquareOfSomething("субъекта");
-                case 4 -> population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
+                case 2 -> {
+                    do {
+                        try {
+                            numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Количество городов не может быть отрицательным!");
+                        }
+                    } while (true);
+                }
+                case 3 -> {
+                    do {
+                        try {
+                            square = AuxiliaryClass.inputSquareOfSomething("субъекта");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Площадь субъекта не может быть отрицательной!");
+                        }
+                    } while (true);
+                }
+                case 4 -> {
+                    do {
+                        try {
+                            population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Население субъекта не может быть отрицательным!");
+                        }
+                    } while (true);
+                }
                 case 5 ->
                         System.out.println("Для изменения списка городов перейдите по соответствующей команде в меню");
                 default -> {

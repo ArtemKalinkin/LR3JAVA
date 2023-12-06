@@ -87,16 +87,14 @@ public class Company {
 
     public long inputTurnover() {
         long turnover;
-        do {
-            System.out.print("Введите оборот за год: ");
-            while (!Main.scanner.hasNextLong()) {
-                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите оборот за год: ");
-                Main.scanner.next();
-            }
-            turnover = Main.scanner.nextLong();
-            if (turnoverPerYear < 0)
-                System.out.println("Оборот не может быть отрицательным");
-        } while (turnoverPerYear < 0);
+        System.out.print("Введите оборот за год: ");
+        while (!Main.scanner.hasNextLong()) {
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите оборот за год: ");
+            Main.scanner.next();
+        }
+        turnover = Main.scanner.nextLong();
+        if (turnoverPerYear < 0)
+            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
 
         Main.scanner.nextLine();
         return turnover;
@@ -132,10 +130,17 @@ public class Company {
         return industry;
     }
 
-    public void inputDateOfFoundation() {
-        boolean flag;
-        String stringDate;
+    public Date parseStringDate(String date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        try {
+            return format.parse(date);
+        } catch (ParseException e) {
+            throw new ParseException("Date parsing error", e.getErrorOffset());
+        }
+    }
+
+    public void inputDateOfFoundation() {
+        String stringDate;
         do {
             System.out.print("Введите дату основания компании в формате (дд.мм.гггг): ");
             try {
@@ -145,13 +150,12 @@ public class Company {
                 }
                 stringDate = Main.scanner.nextLine();
                 stringDate = stringDate.trim();
-                dateOfFoundation = format.parse(stringDate);
-                flag = true;
+                dateOfFoundation = parseStringDate(stringDate);
+                break;
             } catch (ParseException e) {
                 System.out.println("Ошибка ввода!\nДата введена некорректно!");
-                flag = false;
             }
-        } while (!flag);
+        } while (true);
 
     }
 
@@ -161,14 +165,28 @@ public class Company {
         System.out.println("\nВВОД ПРЕДПРИЯТИЯ");
         do {
             flag = false;
-            name = AuxiliaryClass.inputNameOfSomething("компании");
+            do {
+                try {
+                    name = AuxiliaryClass.inputNameOfSomething("компании");
+                    break;
+                } catch (StringWithSmallLetterException e) {
+                    System.out.println("Название компании необходимо писать с заглавной буквы!");
+                }
+            } while (true);
             for (Company otherCompany : companyList)
                 if ((this != otherCompany) & (this.equals(otherCompany))) {
                     System.out.println("Компания с данным названием уже есть в списке");
                     flag = true;
                 }
         } while (flag);
-        turnoverPerYear = inputTurnover();
+        do {
+            try {
+                turnoverPerYear = inputTurnover();
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Оборот за год не может быть отрицательным");
+            }
+        } while (true);
         netProfit = inputNetProfit();
         industry = inputIndustry();
         inputDateOfFoundation();
@@ -217,7 +235,14 @@ public class Company {
                 case 1 -> {
                     do {
                         flag = false;
-                        name = AuxiliaryClass.inputNameOfSomething("компании");
+                        do {
+                            try {
+                                name = AuxiliaryClass.inputNameOfSomething("компании");
+                                break;
+                            } catch (StringWithSmallLetterException e) {
+                                System.out.println("Название компании необходимо писать с заглавной буквы!");
+                            }
+                        } while (true);
                         for (Company otherCompany : companyList)
                             if ((this != otherCompany) && (this.equals(otherCompany))) {
                                 System.out.println("Данный город уже есть в списке");
@@ -230,7 +255,16 @@ public class Company {
                     System.out.println("Для его изменения вам необходимо совершить корректировку в стране, субъекте");
                     System.out.println("и городе, которые относятся к данному предприятию в полях \"Название\"");
                 }
-                case 3 -> turnoverPerYear = inputTurnover();
+                case 3 -> {
+                    do {
+                        try {
+                            turnoverPerYear = inputTurnover();
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Оборот за год не может быть отрицательным");
+                        }
+                    } while (true);
+                }
                 case 4 -> netProfit = inputNetProfit();
                 case 5 -> industry = inputIndustry();
                 case 6 -> inputDateOfFoundation();

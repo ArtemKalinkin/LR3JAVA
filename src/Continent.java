@@ -68,15 +68,36 @@ public class Continent {
         System.out.println("\nВВОД КОНТИНЕНТА");
         do {
             flag = false;
-            name = AuxiliaryClass.inputNameOfSomething("континента");
+            do {
+                try {
+                    name = AuxiliaryClass.inputNameOfSomething("страны");
+                    break;
+                } catch (StringWithSmallLetterException e) {
+                    System.out.println("Название континента необходимо писать с заглавной буквы!");
+                }
+            } while (true);
             for (Continent otherContinent : continentList)
                 if ((this != otherContinent) && (this.equals(otherContinent))) {
                     System.out.println("Данный континент уже есть в списке");
                     flag = true;
                 }
         } while (flag);
-        square = AuxiliaryClass.inputSquareOfSomething("континента");
-        numberOfCountries = AuxiliaryClass.inputNumberOfSomething("стран");
+        do {
+            try {
+                square = AuxiliaryClass.inputSquareOfSomething("континента");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Площадь континента не может быть отрицательной!");
+            }
+        } while (true);
+        do {
+            try {
+                numberOfCountries = AuxiliaryClass.inputNumberOfSomething("стран");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Количество стран не может быть отрицательным!");
+            }
+        } while (true);
         do {
             Country country = new Country();
             country.input(listOfCountries);
@@ -152,7 +173,14 @@ public class Continent {
                 case 1 -> {
                     do {
                         flag = false;
-                        name = AuxiliaryClass.inputNameOfSomething("страны");
+                        do {
+                            try {
+                                name = AuxiliaryClass.inputNameOfSomething("страны");
+                                break;
+                            } catch (StringWithSmallLetterException e) {
+                                System.out.println("Название континента необходимо писать с заглавной буквы!");
+                            }
+                        } while (true);
                         for (Continent otherContinent : continentList)
                             if ((this != otherContinent) && (this.equals(otherContinent))) {
                                 System.out.println("Данная страна уже есть в списке");
@@ -160,8 +188,26 @@ public class Continent {
                             }
                     } while (flag);
                 }
-                case 2 -> numberOfCountries = AuxiliaryClass.inputNumberOfSomething("стран");
-                case 3 -> square = AuxiliaryClass.inputSquareOfSomething("континента");
+                case 2 -> {
+                    do {
+                        try {
+                            numberOfCountries = AuxiliaryClass.inputNumberOfSomething("стран");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Количество стран не может быть отрицательным!");
+                        }
+                    } while (true);
+                }
+                case 3 -> {
+                    do {
+                        try {
+                            square = AuxiliaryClass.inputSquareOfSomething("континента");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Площадь континента не может быть отрицательной!");
+                        }
+                    } while (true);
+                }
                 case 4 -> System.out.println("Для изменения списка стран перейдите по соответствующей команде в меню");
                 default -> {
                 }
