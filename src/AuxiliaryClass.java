@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AuxiliaryClass {
@@ -39,7 +41,7 @@ public class AuxiliaryClass {
         } while (true);
     }
 
-    public static String inputNameOfSomething(String s) throws StringWithSmallLetterException {
+    public static String inputNameOfSomething(String s) {
         String name;
         do {
             System.out.print("Введите название " + s + ": ");
@@ -48,7 +50,7 @@ public class AuxiliaryClass {
                 Main.scanner.next();
             }
             name = Main.scanner.nextLine();
-            if (!Character.isWhitespace(name.charAt(0)))
+            if (!Character.isUpperCase(name.charAt(0)))
                 throw new StringWithSmallLetterException("Ошибка! Строка начинается не с заглавной буквы!");
             if (name.isBlank())
                 System.out.println("Данное поле не может быть пустым");
@@ -615,6 +617,92 @@ public class AuxiliaryClass {
         Subject.printTotalSubjects();
         City.printTotalCities();
         Company.printTotalCompanies();
+    }
+
+    public static void workWithStaticArrays() {
+        Company[] companiesOne;
+        Company[][] companiesTwo = new Company[4][4];
+        List<Company> companies = new ArrayList<>();
+        int n = 0;
+        System.out.println("Введите барнаульские компании");
+        do {
+            Company company = new Company();
+            company.input(companies);
+            company.setAddress("Россия, Алтайский край, Барнаул");
+            companies.add(company);
+            n++;
+        } while ((n < 16) && (answerYesOrNo("Желаете продолжить ввод компаний? (y/n):")));
+        companiesOne = companies.toArray(new Company[n]);
+        if (n == 16) {
+            int k = 0;
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    companiesTwo[i][j] = companies.get(k);
+                    k++;
+                }
+            }
+            System.out.println("Неотсортированный список:");
+            Company.tableHeader();
+            k = 1;
+            for (int i = 0; i < companiesTwo.length; i++) {
+                for (int j = 0; j < companiesTwo[i].length; j++) {
+                    companiesTwo[i][j].output(k);
+                    k++;
+                }
+            }
+        } else {
+            System.out.println("Неотсортированный список:");
+            Company.tableHeader();
+            int k = 0;
+            for (Company company : companiesOne) {
+                company.output(k);
+                k++;
+            }
+        }
+        quickSort(companiesOne, 0, companiesOne.length - 1);
+        System.out.println("Список в порядке возрастания прибыли компаний:");
+        int k = 0;
+        Company.tableHeader();
+        for (Company company : companiesOne) {
+            company.output(k);
+            k++;
+        }
+    }
+
+    public static void quickSort(Company[] arr, int low, int high) {
+        if (low < high) {
+            int pi = splitIntoParts(arr, low, high);
+
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    private static int splitIntoParts(Company[] companies, int low, int high) {
+        int middle = low + (high - low) / 2;
+        long middleElement = companies[middle].getNetProfit();
+
+        Company temp = companies[middle];
+        ;
+        companies[middle] = companies[high];
+        companies[high] = temp;
+
+        int i = (low - 1);
+        for (int j = low; j < high; j++) {
+            if (companies[j].getNetProfit() < middleElement) {
+                i++;
+
+                temp = companies[i];
+                companies[i] = companies[j];
+                companies[j] = temp;
+            }
+        }
+
+        temp = companies[i + 1];
+        companies[i + 1] = companies[high];
+        companies[high] = temp;
+
+        return i + 1;
     }
 }
 

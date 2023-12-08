@@ -93,7 +93,7 @@ public class Company {
             Main.scanner.next();
         }
         turnover = Main.scanner.nextLong();
-        if (turnoverPerYear < 0)
+        if (turnover < 0)
             throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
 
         Main.scanner.nextLine();

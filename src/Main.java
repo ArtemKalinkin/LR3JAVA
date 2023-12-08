@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -9,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         int number;
         int numberOfMenu;
-
+        AuxiliaryClass.workWithStaticArrays();
         List<Continent> listOfContinents = new ArrayList<>();
         do {
             if (listOfContinents.isEmpty()) {
@@ -19,7 +17,7 @@ public class Main {
                     continent.input(listOfContinents);
                     listOfContinents.add(continent);
                 } while ((listOfContinents.size() < 6) &&
-                        (AuxiliaryClass.answerYesOrNo("Желаете продолжить ввод континентов (y/n):")));
+                        (AuxiliaryClass.answerYesOrNo("Желаете продолжить ввод континентов? (y/n):")));
                 numberOfMenu = 0;
             } else {
                 System.out.println("\n\n\n\n__МЕНЮ__");
