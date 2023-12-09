@@ -69,17 +69,36 @@ public class City {
         System.out.println("\nВВОД ГОРОДА");
         do {
             flag = false;
-            name = AuxiliaryClass.inputNameOfSomething("города");
+            do {
+                try {
+                    name = AuxiliaryClass.inputNameOfSomething("города");
+                    break;
+                } catch (StringWithSmallLetterException e) {
+                    System.out.println("Название города необходимо писать с заглавной буквы!");
+                }
+            } while (true);
             for (City otherCity : cityList)
                 if ((this != otherCity) && (this.equals(otherCity))) {
                     System.out.println("Данный город уже есть в списке");
                     flag = true;
                 }
         } while (flag);
-
-        population = AuxiliaryClass.inputPopulationOfSomething("города");
-        numberOfCompany = AuxiliaryClass.inputNumberOfSomething("компаний");
-
+        do {
+            try {
+                population = AuxiliaryClass.inputPopulationOfSomething("города");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Население города не может быть отрицательным!");
+            }
+        } while (true);
+        do {
+            try {
+                numberOfCompany = AuxiliaryClass.inputNumberOfSomething("компаний");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Количество компаний не может быть отрицательным!");
+            }
+        } while (true);
         do {
             Company company = new Company();
             company.input(listOfCompany);
@@ -155,7 +174,14 @@ public class City {
                 case 1 -> {
                     do {
                         flag = false;
-                        name = AuxiliaryClass.inputNameOfSomething("города");
+                        do {
+                            try {
+                                name = AuxiliaryClass.inputNameOfSomething("города");
+                                break;
+                            } catch (StringWithSmallLetterException e) {
+                                System.out.println("Название города необходимо писать с заглавной буквы!");
+                            }
+                        } while (true);
                         for (City otherCity : cityList)
                             if ((this != otherCity) && (this.equals(otherCity))) {
                                 System.out.println("Данный город уже есть в списке");
@@ -163,8 +189,26 @@ public class City {
                             }
                     } while (flag);
                 }
-                case 2 -> numberOfCompany = AuxiliaryClass.inputNumberOfSomething("компании");
-                case 3 -> population = AuxiliaryClass.inputPopulationOfSomething("города");
+                case 2 -> {
+                    do {
+                        try {
+                            population = AuxiliaryClass.inputPopulationOfSomething("города");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Население города не может быть отрицательным!");
+                        }
+                    } while (true);
+                }
+                case 3 -> {
+                    do {
+                        try {
+                            numberOfCompany = AuxiliaryClass.inputNumberOfSomething("компаний");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Количество компаний не может быть отрицательным!");
+                        }
+                    } while (true);
+                }
                 case 4 ->
                         System.out.println("Для изменения списка компаний перейдите по соответствующей команде в меню");
                 default -> {

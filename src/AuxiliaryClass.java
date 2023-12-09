@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AuxiliaryClass {
@@ -24,16 +26,10 @@ public class AuxiliaryClass {
             System.out.println(s);
             answer = Main.scanner.nextLine();
             switch (answer) {
-                case "No", "n", "N", "no" -> {
+                case "No", "n", "N", "no", "Нет", "нет" -> {
                     return false;
                 }
-                case "Нет", "нет" -> {
-                    return false;
-                }
-                case "yes", "y", "Y", "Yes" -> {
-                    return true;
-                }
-                case "Да", "да" -> {
+                case "yes", "y", "Y", "Yes", "Да", "да" -> {
                     return true;
                 }
                 default -> {
@@ -54,6 +50,8 @@ public class AuxiliaryClass {
                 Main.scanner.next();
             }
             name = Main.scanner.nextLine();
+            if (!Character.isUpperCase(name.charAt(0)))
+                throw new StringWithSmallLetterException("Ошибка! Строка начинается не с заглавной буквы!");
             if (name.isBlank())
                 System.out.println("Данное поле не может быть пустым");
         } while (name.isBlank());
@@ -63,33 +61,28 @@ public class AuxiliaryClass {
 
     public static int inputNumberOfSomething(String s) {
         int number;
-        do {
-            System.out.print("Введите количество " + s + ": ");
-            while (!Main.scanner.hasNextInt()) {
-                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите количество " + s + ": ");
-                Main.scanner.next();
-            }
-            number = Main.scanner.nextInt();
-            if (number < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (number < 0);
-
+        System.out.print("Введите количество " + s + ": ");
+        while (!Main.scanner.hasNextInt()) {
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите количество " + s + ": ");
+            Main.scanner.next();
+        }
+        number = Main.scanner.nextInt();
+        if (number < 0)
+            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
         Main.scanner.nextLine();
         return number;
     }
 
     public static int inputSquareOfSomething(String s) {
         int square;
-        do {
-            System.out.print("Введите площадь " + s + ": ");
-            while (!Main.scanner.hasNextInt()) {
-                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите площадь " + s + ": ");
-                Main.scanner.next();
-            }
-            square = Main.scanner.nextInt();
-            if (square < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (square < 0);
+        System.out.print("Введите площадь " + s + ": ");
+        while (!Main.scanner.hasNextInt()) {
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите площадь " + s + ": ");
+            Main.scanner.next();
+        }
+        square = Main.scanner.nextInt();
+        if (square < 0)
+            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
 
         Main.scanner.nextLine();
         return square;
@@ -97,16 +90,14 @@ public class AuxiliaryClass {
 
     public static int inputPopulationOfSomething(String s) {
         int population;
-        do {
-            System.out.print("Введите население " + s + ": ");
-            while (!Main.scanner.hasNextInt()) {
-                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите население " + s + ": ");
-                Main.scanner.next();
-            }
-            population = Main.scanner.nextInt();
-            if (population < 0)
-                System.out.println("Данное поле не может быть отрицательным!");
-        } while (population < 0);
+        System.out.print("Введите население " + s + ": ");
+        while (!Main.scanner.hasNextInt()) {
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите население " + s + ": ");
+            Main.scanner.next();
+        }
+        population = Main.scanner.nextInt();
+        if (population < 0)
+            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
 
         Main.scanner.nextLine();
         return population;
@@ -626,6 +617,92 @@ public class AuxiliaryClass {
         Subject.printTotalSubjects();
         City.printTotalCities();
         Company.printTotalCompanies();
+    }
+
+    public static void workWithStaticArrays() {
+        Company[] companiesOne;
+        Company[][] companiesTwo = new Company[4][4];
+        List<Company> companies = new ArrayList<>();
+        int n = 0;
+        System.out.println("Введите барнаульские компании");
+        do {
+            Company company = new Company();
+            company.input(companies);
+            company.setAddress("Россия, Алтайский край, Барнаул");
+            companies.add(company);
+            n++;
+        } while ((n < 16) && (answerYesOrNo("Желаете продолжить ввод компаний? (y/n):")));
+        companiesOne = companies.toArray(new Company[n]);
+        if (n == 16) {
+            int k = 0;
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    companiesTwo[i][j] = companies.get(k);
+                    k++;
+                }
+            }
+            System.out.println("Неотсортированный список:");
+            Company.tableHeader();
+            k = 1;
+            for (int i = 0; i < companiesTwo.length; i++) {
+                for (int j = 0; j < companiesTwo[i].length; j++) {
+                    companiesTwo[i][j].output(k);
+                    k++;
+                }
+            }
+        } else {
+            System.out.println("Неотсортированный список:");
+            Company.tableHeader();
+            int k = 0;
+            for (Company company : companiesOne) {
+                company.output(k);
+                k++;
+            }
+        }
+        quickSort(companiesOne, 0, companiesOne.length - 1);
+        System.out.println("Список в порядке возрастания прибыли компаний:");
+        int k = 0;
+        Company.tableHeader();
+        for (Company company : companiesOne) {
+            company.output(k);
+            k++;
+        }
+    }
+
+    public static void quickSort(Company[] arr, int low, int high) {
+        if (low < high) {
+            int pi = splitIntoParts(arr, low, high);
+
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    private static int splitIntoParts(Company[] companies, int low, int high) {
+        int middle = low + (high - low) / 2;
+        long middleElement = companies[middle].getNetProfit();
+
+        Company temp = companies[middle];
+        ;
+        companies[middle] = companies[high];
+        companies[high] = temp;
+
+        int i = (low - 1);
+        for (int j = low; j < high; j++) {
+            if (companies[j].getNetProfit() < middleElement) {
+                i++;
+
+                temp = companies[i];
+                companies[i] = companies[j];
+                companies[j] = temp;
+            }
+        }
+
+        temp = companies[i + 1];
+        companies[i + 1] = companies[high];
+        companies[high] = temp;
+
+        return i + 1;
     }
 }
 
