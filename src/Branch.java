@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Branch extends Company {
 
-    public String status;
+    private String status;
     private int numberOfEmployees;
 
     public Branch() {
