@@ -1,12 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Country {
-    private String name;
+public class Country extends AbstractElement implements Modifiable<Country>, Cloneable, Printable {
     private int numberOfSubjects;
     private long netProfitFromCompanies;
-    private int population;
-    private int square;
     private long income;
     private long expenses;
     private long budgetDeficitOrSurplus;
@@ -17,29 +14,16 @@ public class Country {
     public Country() {
     }
 
-    public Country(String name) {
-        this.name = name;
-    }
 
     public Country(String name, int numberOfSubjects, long netProfitFromCompanies, int population,
                    int square, long income, long expenses, List<Subject> listOfSubjects) {
-        this.name = name;
+        super(name, population, square);
         this.numberOfSubjects = numberOfSubjects;
         this.netProfitFromCompanies = netProfitFromCompanies;
-        this.population = population;
-        this.square = square;
         this.income = income;
         this.expenses = expenses;
         this.budgetDeficitOrSurplus = income - expenses;
         this.listOfSubjects = listOfSubjects;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setNumberOfSubjects(int numberOfSubjects) {
@@ -59,21 +43,6 @@ public class Country {
         return netProfitFromCompanies;
     }
 
-    public void setPopulation(int population) {
-        this.population = population;
-    }
-
-    public int getPopulation() {
-        return population;
-    }
-
-    public void setSquare(int square) {
-        this.square = square;
-    }
-
-    public int getSquare() {
-        return square;
-    }
 
     public void setIncome(long income) {
         this.income = income;
@@ -177,7 +146,7 @@ public class Country {
         do {
             flag = false;
             try {
-                name = AuxiliaryClass.inputNameOfSomething("страны");
+                name = inputName("страны");
             } catch (StringWithSmallLetterException e) {
                 System.out.println("Название страны необходимо писать с заглавной буквы!");
             }
@@ -189,7 +158,7 @@ public class Country {
         } while (flag);
         do {
             try {
-                numberOfSubjects = AuxiliaryClass.inputNumberOfSomething("субъектов");
+                numberOfSubjects = inputNumber("субъектов");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Количество субъектов не может быть отрицательным!");
@@ -197,7 +166,7 @@ public class Country {
         } while (true);
         do {
             try {
-                square = AuxiliaryClass.inputSquareOfSomething("страны");
+                square = inputSquare("страны");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Площадь страны не может быть отрицательной!");
@@ -205,7 +174,7 @@ public class Country {
         } while (true);
         do {
             try {
-                population = AuxiliaryClass.inputPopulationOfSomething("страны");
+                population = inputPopulation("страны");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Население страны не может быть отрицательным!");
@@ -250,6 +219,26 @@ public class Country {
                 "**************************************************************\n");
     }
 
+    @Override
+    public String toString() {
+        StringBuilder string;
+        string = new StringBuilder(String.format(" * %-18s * %-20d * %-14d * ", name, numberOfSubjects, square));
+        string.append(String.format("%-9d * %-19d * %-14d * ", population, netProfitFromCompanies, income));
+        string.append(String.format("%-15d * %-24d ", expenses, budgetDeficitOrSurplus));
+        if (listOfSubjects.isEmpty())
+            string.append(String.format("* %-25s *\n", AuxiliaryClass.listIsEmpty));
+        else
+            string.append(String.format("* %-25s *\n", listOfSubjects.get(0).getName()));
+        for (int i = 1; i < listOfSubjects.size(); i++) {
+            string.append(String.format("*       *                    *                      *                *           *" +
+                            "                     *                *                 *                          * %-25s *\n",
+                    listOfSubjects.get(i).getName()));
+        }
+        string.append("****************************************************************************************" +
+                "**********************************************************************************************************\n");
+        return string.toString();
+    }
+
     public void output(int number) {
         System.out.printf("* %-5d * %-18s * %-20d * %-14d * ", number + 1, name, numberOfSubjects, square);
         System.out.printf("%-9d * %-19d * %-14d * ", population, netProfitFromCompanies, income);
@@ -273,9 +262,10 @@ public class Country {
         int size = listOfSubjects.size();
         if (size != 0) {
             Subject.tableHeader();
-            i = 0;
+            i = 1;
             for (Subject subject : listOfSubjects) {
-                subject.output(i);
+                System.out.printf("* %-5d", i);
+                System.out.print(subject);
                 i++;
             }
             do {
@@ -405,7 +395,8 @@ public class Country {
         int number;
         System.out.println("\nИЗМЕНЕНИЯ ПОЛЕЙ");
         tableHeader();
-        output(0);
+        System.out.printf("* %-5d", 1);
+        System.out.print(this);
         do {
             System.out.println("1.Название страны");
             System.out.println("2.Количество субъектов");
@@ -429,7 +420,7 @@ public class Country {
                         flag = false;
                         do {
                             try {
-                                name = AuxiliaryClass.inputNameOfSomething("страны");
+                                name = inputName("страны");
                                 break;
                             } catch (StringWithSmallLetterException e) {
                                 System.out.println("Название страны необходимо писать с заглавной буквы!");
@@ -446,7 +437,7 @@ public class Country {
                 case 2 -> {
                     do {
                         try {
-                            numberOfSubjects = AuxiliaryClass.inputNumberOfSomething("субъектов");
+                            numberOfSubjects = inputNumber("субъектов");
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Количество субъектов не может быть отрицательным!");
@@ -456,7 +447,7 @@ public class Country {
                 case 3 -> {
                     do {
                         try {
-                            square = AuxiliaryClass.inputSquareOfSomething("страны");
+                            square = inputSquare("страны");
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Площадь страны не может быть отрицательной!");
@@ -466,7 +457,7 @@ public class Country {
                 case 4 -> {
                     do {
                         try {
-                            population = AuxiliaryClass.inputPopulationOfSomething("страны");
+                            population = inputPopulation("страны");
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Население страны не может быть отрицательным!");
@@ -524,7 +515,7 @@ public class Country {
             System.out.println("число количества субъектов в данной стране");
             if (AuxiliaryClass.answerYesOrNo("Желаете это сделать?")) {
                 do {
-                    number = AuxiliaryClass.inputNumberOfSomething("субъектов");
+                    number = inputNumber("субъектов");
                     if (number <= listOfSubjects.size())
                         System.out.println("Данное число меньше или соответствует уже имеющемуся");
                 } while (number <= listOfSubjects.size());
@@ -538,7 +529,8 @@ public class Country {
         int number;
         number = chooseSubject();
         Subject.tableHeader();
-        listOfSubjects.get(number).output(0);
+        System.out.printf("* %-5d", 1);
+        System.out.print(listOfSubjects.get(number));
         if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный субъект из списка?")) {
             listOfSubjects.remove(number);
             Subject.decrementTotalSubjects();
@@ -557,4 +549,23 @@ public class Country {
         System.out.println("Вы внесли в список " + totalCountries + " из 195 существующих стран");
     }
 
+    @Override
+    public Country clone() {
+        try {
+            Country clone = (Country) super.clone();
+            List<Subject> clonedSubjects = new ArrayList<>();
+            for (Subject subject : listOfSubjects)
+                clonedSubjects.add(subject.clone());
+            clone.listOfSubjects = clonedSubjects;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public String getFormattedInfo() {
+        return "Страна: " + name + "; " + numberOfSubjects + "; " + square + "; " + population + "; "
+                + netProfitFromCompanies + "; " + income + "; " + expenses + "; " + budgetDeficitOrSurplus + ".";
+    }
 }

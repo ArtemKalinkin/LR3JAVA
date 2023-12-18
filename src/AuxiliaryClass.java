@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class AuxiliaryClass {
@@ -41,78 +40,16 @@ public class AuxiliaryClass {
         } while (true);
     }
 
-    public static String inputNameOfSomething(String s) {
-        String name;
-        do {
-            System.out.print("Введите название " + s + ": ");
-            while (!Main.scanner.hasNextLine()) {
-                System.out.print("\nОшибка ввода!\nВведите название " + s + ": ");
-                Main.scanner.next();
-            }
-            name = Main.scanner.nextLine();
-            if (!Character.isUpperCase(name.charAt(0)))
-                throw new StringWithSmallLetterException("Ошибка! Строка начинается не с заглавной буквы!");
-            if (name.isBlank())
-                System.out.println("Данное поле не может быть пустым");
-        } while (name.isBlank());
-        name = name.trim();
-        return name;
-    }
-
-    public static int inputNumberOfSomething(String s) {
-        int number;
-        System.out.print("Введите количество " + s + ": ");
-        while (!Main.scanner.hasNextInt()) {
-            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите количество " + s + ": ");
-            Main.scanner.next();
-        }
-        number = Main.scanner.nextInt();
-        if (number < 0)
-            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
-        Main.scanner.nextLine();
-        return number;
-    }
-
-    public static int inputSquareOfSomething(String s) {
-        int square;
-        System.out.print("Введите площадь " + s + ": ");
-        while (!Main.scanner.hasNextInt()) {
-            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите площадь " + s + ": ");
-            Main.scanner.next();
-        }
-        square = Main.scanner.nextInt();
-        if (square < 0)
-            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
-
-        Main.scanner.nextLine();
-        return square;
-    }
-
-    public static int inputPopulationOfSomething(String s) {
-        int population;
-        System.out.print("Введите население " + s + ": ");
-        while (!Main.scanner.hasNextInt()) {
-            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите население " + s + ": ");
-            Main.scanner.next();
-        }
-        population = Main.scanner.nextInt();
-        if (population < 0)
-            throw new IllegalArgumentException("Ошибка! Значение не может быть отрицательным!");
-
-        Main.scanner.nextLine();
-        return population;
-    }
-
-
     public static int chooseContinent(List<Continent> listOfContinents) {
         int number = 0;
         int i;
         int size = listOfContinents.size();
         if (!listOfContinents.isEmpty()) {
             Continent.tableHeader();
-            i = 0;
+            i = 1;
             for (Continent continent : listOfContinents) {
-                continent.output(i);
+                System.out.printf("* %-5d", i);
+                System.out.print(continent);
                 i++;
             }
             do {
@@ -140,7 +77,8 @@ public class AuxiliaryClass {
         if (!listOfContinents.isEmpty()) {
             number = chooseContinent(listOfContinents);
             Continent.tableHeader();
-            listOfContinents.get(number).output(0);
+            System.out.printf("* %-5d", 1);
+            System.out.print(listOfContinents.get(number));
             if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный континент из списка?")) {
                 listOfContinents.remove(number);
                 Continent.decrementTotalContinents();
@@ -171,7 +109,7 @@ public class AuxiliaryClass {
     }
 
     public static void outputAll(List<Continent> continentList, int number) {
-        int i = 0;
+        int i = 1;
         int numberOfContinent;
         int numberOfCountry;
         int numberOfSubject;
@@ -186,7 +124,8 @@ public class AuxiliaryClass {
                     System.out.println("\n\n" + listIsEmpty);
                 Continent.tableHeader();
                 for (Continent continent : continentList) {
-                    continent.output(i);
+                    System.out.printf("* %-5d", i);
+                    System.out.print(continent);
                     i++;
                 }
             }
@@ -199,7 +138,8 @@ public class AuxiliaryClass {
                 countries = continentList.get(numberOfContinent).getListOfCountries();
                 Country.tableHeader();
                 for (Country country : countries) {
-                    country.output(i);
+                    System.out.printf("* %-5d", i);
+                    System.out.print(country);
                     i++;
                 }
             }
@@ -218,7 +158,8 @@ public class AuxiliaryClass {
                 subjects = countries.get(numberOfCountry).getListOfSubjects();
                 Subject.tableHeader();
                 for (Subject subject : subjects) {
-                    subject.output(i);
+                    System.out.printf("* %-5d", i);
+                    System.out.print(subject);
                     i++;
                 }
             }
@@ -243,7 +184,8 @@ public class AuxiliaryClass {
                 cities = subjects.get(numberOfSubject).getListOfCities();
                 City.tableHeader();
                 for (City city : cities) {
-                    city.output(i);
+                    System.out.printf("* %-5d", i);
+                    System.out.print(city);
                     i++;
                 }
             }
@@ -274,7 +216,11 @@ public class AuxiliaryClass {
                 companies = cities.get(numberOfCity).getListOfCompany();
                 Company.tableHeader();
                 for (Company company : companies) {
-                    company.output(i);
+                    System.out.printf("* %-5d", i);
+                    if (company instanceof Branch branch) {
+                        System.out.print(branch);
+                    } else
+                        System.out.print(company);
                     i++;
                 }
             }
@@ -307,7 +253,8 @@ public class AuxiliaryClass {
             Country.tableHeader();
             int i = 0;
             for (Country country : countryListOne) {
-                country.output(i);
+                System.out.printf("* %-5d", i);
+                System.out.print(country);
                 i++;
             }
             int size = countryListOne.size();
@@ -322,7 +269,8 @@ public class AuxiliaryClass {
             Country.tableHeader();
             i = 0;
             for (Country country : countryListTwo) {
-                country.output(i);
+                System.out.printf("* %-5d", i);
+                System.out.print(country);
                 i++;
             }
             size = countryListTwo.size();
@@ -627,7 +575,7 @@ public class AuxiliaryClass {
         System.out.println("Введите барнаульские компании");
         do {
             Company company = new Company();
-            company.input(companies);
+            company.input(companies, false);
             company.setAddress("Россия, Алтайский край, Барнаул");
             companies.add(company);
             n++;
@@ -646,7 +594,8 @@ public class AuxiliaryClass {
             k = 1;
             for (int i = 0; i < companiesTwo.length; i++) {
                 for (int j = 0; j < companiesTwo[i].length; j++) {
-                    companiesTwo[i][j].output(k);
+                    System.out.printf("* %-5d", k);
+                    System.out.print(companiesTwo[i][j]);
                     k++;
                 }
             }
@@ -655,7 +604,8 @@ public class AuxiliaryClass {
             Company.tableHeader();
             int k = 0;
             for (Company company : companiesOne) {
-                company.output(k);
+                System.out.printf("* %-5d", k);
+                System.out.print(company);
                 k++;
             }
         }
@@ -664,7 +614,8 @@ public class AuxiliaryClass {
         int k = 0;
         Company.tableHeader();
         for (Company company : companiesOne) {
-            company.output(k);
+            System.out.printf("* %-5d", k);
+            System.out.print(company);
             k++;
         }
     }
@@ -704,6 +655,46 @@ public class AuxiliaryClass {
 
         return i + 1;
     }
+
+    public static void searchSomethingWithSameName(List<Continent> continentList) {
+        Container<Printable> container = new Container<>();
+        String currentName;
+        currentName = AbstractElement.inputName("");
+        for (Continent continent : continentList) {
+            if (continent.getName().equalsIgnoreCase(currentName))
+                container.addElement(continent);
+            for (Country country : continent.getListOfCountries()) {
+                if (country.getName().equalsIgnoreCase(currentName))
+                    container.addElement(country);
+                for (Subject subject : country.getListOfSubjects()) {
+                    if (subject.getName().equalsIgnoreCase(currentName)) {
+                        container.addElement(subject);
+                    }
+                    for (City city : subject.getListOfCities()) {
+                        if (city.getName().equalsIgnoreCase(currentName))
+                            container.addElement(city);
+                        for (Company company : city.getListOfCompany()) {
+                            if (company.getName().equalsIgnoreCase(currentName)) {
+                                if (company instanceof Branch branch)
+                                    container.addElement(branch);
+                                else
+                                    container.addElement(company);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (container.getElements().isEmpty()) {
+            System.out.println("Ничего не найдено");
+            System.out.println(listIsEmpty);
+        } else {
+            System.out.println("Совпадения");
+            container.displayElements();
+        }
+    }
+
+
 }
 
 

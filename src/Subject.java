@@ -1,13 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Subject {
-    private String name;
+public class Subject extends AbstractElement implements Modifiable<Subject>, Cloneable, Printable {
     private int numberOfCities;
-    private int population;
-    private int square;
     private List<City> listOfCities = new ArrayList<>();
-
     private static int totalSubjects = 0;
 
     public Subject() {
@@ -18,19 +14,9 @@ public class Subject {
     }
 
     public Subject(String name, int numberOfCities, int population, int square, List<City> listOfCity) {
-        this.name = name;
+        super(name, population, square);
         this.numberOfCities = numberOfCities;
-        this.population = population;
-        this.square = square;
         this.listOfCities = listOfCity;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setNumberOfCities(int numberOfCities) {
@@ -39,22 +25,6 @@ public class Subject {
 
     public int getNumberOfCities() {
         return numberOfCities;
-    }
-
-    public void setPopulation(int population) {
-        this.population = population;
-    }
-
-    public int getPopulation() {
-        return population;
-    }
-
-    public void setSquare(int square) {
-        this.square = square;
-    }
-
-    public int getSquare() {
-        return square;
     }
 
     public void setListOfCities(List<City> listOfCity) {
@@ -79,7 +49,7 @@ public class Subject {
             flag = false;
             do {
                 try {
-                    name = AuxiliaryClass.inputNameOfSomething("субъекта");
+                    name = inputName("субъекта");
                     break;
                 } catch (StringWithSmallLetterException e) {
                     System.out.println("Название субъекта необходимо писать с заглавной буквы!");
@@ -93,7 +63,7 @@ public class Subject {
         } while (flag);
         do {
             try {
-                numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
+                numberOfCities = inputNumber("городов");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Количество городов не может быть отрицательным!");
@@ -101,7 +71,7 @@ public class Subject {
         } while (true);
         do {
             try {
-                square = AuxiliaryClass.inputSquareOfSomething("субъекта");
+                square = inputSquare("субъекта");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Площадь субъекта не может быть отрицательной!");
@@ -109,7 +79,7 @@ public class Subject {
         } while (true);
         do {
             try {
-                population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
+                population = inputPopulation("субъекта");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Население субъекта не может быть отрицательным!");
@@ -132,6 +102,24 @@ public class Subject {
                 "********************************************************\n");
     }
 
+    @Override
+    public String toString() {
+        StringBuilder string;
+        string = new StringBuilder(String.format(" * %-18s * %-18d * %-16d * %-9d * ", name, numberOfCities,
+                square, population));
+        if (listOfCities.isEmpty())
+            string.append(AuxiliaryClass.listIsEmpty);
+        else
+            string.append(String.format("%-28s *\n", listOfCities.get(0).getName()));
+        for (int i = 1; i < listOfCities.size(); i++) {
+            string.append(String.format("*       *                    *             " +
+                    "       *                  *           * %-28s *\n", listOfCities.get(i).getName()));
+        }
+        string.append("****************************************************************" +
+                "*************************************************\n");
+        return string.toString();
+    }
+
     public void output(int number) {
         System.out.printf("* %-5d * %-18s * %-18d * ", number + 1, name, numberOfCities);
         if (listOfCities.isEmpty())
@@ -152,9 +140,10 @@ public class Subject {
         int size = listOfCities.size();
         if (size != 0) {
             City.tableHeader();
-            i = 0;
+            i = 1;
             for (City city : listOfCities) {
-                city.output(i);
+                System.out.printf("* %-5d", i);
+                System.out.print(city);
                 i++;
             }
             do {
@@ -173,7 +162,8 @@ public class Subject {
         int number;
         System.out.println("\nИЗМЕНЕНИЯ ПОЛЕЙ");
         tableHeader();
-        output(0);
+        System.out.printf("* %-5d", 1);
+        System.out.print(this);
         do {
             System.out.println("1.Название субъекта");
             System.out.println("2.Количество городов");
@@ -193,7 +183,7 @@ public class Subject {
                         flag = false;
                         do {
                             try {
-                                name = AuxiliaryClass.inputNameOfSomething("субъекта");
+                                name = inputName("субъекта");
                                 break;
                             } catch (StringWithSmallLetterException e) {
                                 System.out.println("Название субъекта необходимо писать с заглавной буквы!");
@@ -209,7 +199,7 @@ public class Subject {
                 case 2 -> {
                     do {
                         try {
-                            numberOfCities = AuxiliaryClass.inputNumberOfSomething("городов");
+                            numberOfCities = inputNumber("городов");
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Количество городов не может быть отрицательным!");
@@ -219,7 +209,7 @@ public class Subject {
                 case 3 -> {
                     do {
                         try {
-                            square = AuxiliaryClass.inputSquareOfSomething("субъекта");
+                            square = inputSquare("субъекта");
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Площадь субъекта не может быть отрицательной!");
@@ -229,7 +219,7 @@ public class Subject {
                 case 4 -> {
                     do {
                         try {
-                            population = AuxiliaryClass.inputPopulationOfSomething("субъекта");
+                            population = inputPopulation("субъекта");
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Население субъекта не может быть отрицательным!");
@@ -258,7 +248,7 @@ public class Subject {
             System.out.println("число количества городов в данном субъекте");
             if (AuxiliaryClass.answerYesOrNo("Желаете это сделать?")) {
                 do {
-                    number = AuxiliaryClass.inputNumberOfSomething("городов");
+                    number = inputNumber("городов");
                     if (number <= listOfCities.size())
                         System.out.println("Данное число меньше или соответствует уже имеющемуся");
                 } while (number <= listOfCities.size());
@@ -272,7 +262,8 @@ public class Subject {
         int number;
         number = chooseCity();
         City.tableHeader();
-        listOfCities.get(number).output(0);
+        System.out.printf("* %-5d", 1);
+        System.out.print(listOfCities.get(number));
         if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данный город из списка?")) {
             listOfCities.remove(number);
             City.decrementTotalCities();
@@ -289,5 +280,24 @@ public class Subject {
 
     public static void printTotalSubjects() {
         System.out.println("Всего вы внесли в список " + totalSubjects + " субъектов");
+    }
+
+    @Override
+    public Subject clone() {
+        try {
+            Subject clone = (Subject) super.clone();
+            List<City> clonedCities = new ArrayList<>();
+            for (City city : listOfCities)
+                clonedCities.add(city.clone());
+            clone.listOfCities = clonedCities;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public String getFormattedInfo() {
+        return "Субъект: " + name + "; " + numberOfCities + "; " + square + "; " + population + ".";
     }
 }

@@ -7,7 +7,6 @@ public class Main {
     public static void main(String[] args) {
         int number;
         int numberOfMenu;
-        AuxiliaryClass.workWithStaticArrays();
         List<Continent> listOfContinents = new ArrayList<>();
         do {
             if (listOfContinents.isEmpty()) {
@@ -27,16 +26,18 @@ public class Main {
                 System.out.println("4.Удалить элемент из списка");
                 System.out.println("5.Добавить новый элемент в список");
                 System.out.println("6.Узнать количество введенных элементов");
-                System.out.println("7.Завершить работу");
+                System.out.println("7.Поиск чего-либо по названию");
+                System.out.println("8.Завершить работу");
 
                 do {
                     System.out.print("\nВведите номер действия: ");
-                    while (!Main.scanner.hasNextInt()) {
+                    while (!scanner.hasNextInt()) {
                         System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер действия: ");
-                        Main.scanner.next();
+                        scanner.next();
                     }
-                    numberOfMenu = Main.scanner.nextInt();
-                } while ((numberOfMenu < 1) || (numberOfMenu > 7));
+                    numberOfMenu = scanner.nextInt();
+                    scanner.nextLine();
+                } while ((numberOfMenu < 1) || (numberOfMenu > 8));
                 switch (numberOfMenu) {
                     case 1 -> {
                         number = AuxiliaryClass.menuOutput();
@@ -47,17 +48,14 @@ public class Main {
                     case 4 -> AuxiliaryClass.addOrRemoveSomething(listOfContinents, false);
                     case 5 -> AuxiliaryClass.addOrRemoveSomething(listOfContinents, true);
                     case 6 -> AuxiliaryClass.printInfoOfTotalElements();
-                    case 7 -> {
+                    case 7 -> AuxiliaryClass.searchSomethingWithSameName(listOfContinents);
+                    case 8 -> {
                         if (!AuxiliaryClass.answerYesOrNo("Вы действительно желаете завершить работу?"))
                             numberOfMenu = 0;
                     }
-                    default -> {
-                    }
                 }
             }
-        } while (numberOfMenu != 7);
+        } while (numberOfMenu != 8);
         scanner.close();
     }
-
-
 }

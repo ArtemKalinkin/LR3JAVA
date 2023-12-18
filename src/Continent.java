@@ -1,10 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Continent {
-    private String name;
+public class Continent extends AbstractElement implements Modifiable<Continent>, Cloneable, Printable {
     private int numberOfCountries;
-    private int square;
+
     private List<Country> listOfCountries = new ArrayList<>();
 
     private static int totalContinents = 0;
@@ -16,20 +15,11 @@ public class Continent {
         this.name = name;
     }
 
-    public Continent(String name, int numberOfCountries, int square, List<Country> listOfCountries) {
-        this.name = name;
+    public Continent(String name, int numberOfCountries, int square, List<Country> listOfCountries, int population) {
+        super(name, population, square);
         this.numberOfCountries = numberOfCountries;
-        this.square = square;
-        this.listOfCountries = listOfCountries;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public void setNumberOfCountries(int numberOfCountries) {
         this.numberOfCountries = numberOfCountries;
@@ -39,13 +29,6 @@ public class Continent {
         return numberOfCountries;
     }
 
-    public void setSquare(int square) {
-        this.square = square;
-    }
-
-    public int getSquare() {
-        return square;
-    }
 
     public void setListOfCountries(List<Country> listOfCountries) {
         this.listOfCountries = listOfCountries;
@@ -70,7 +53,7 @@ public class Continent {
             flag = false;
             do {
                 try {
-                    name = AuxiliaryClass.inputNameOfSomething("страны");
+                    name = inputName("континента");
                     break;
                 } catch (StringWithSmallLetterException e) {
                     System.out.println("Название континента необходимо писать с заглавной буквы!");
@@ -84,7 +67,15 @@ public class Continent {
         } while (flag);
         do {
             try {
-                square = AuxiliaryClass.inputSquareOfSomething("континента");
+                population = inputPopulation("континента");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Население страны не может быть отрицательным!");
+            }
+        } while (true);
+        do {
+            try {
+                square = inputSquare("континента");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Площадь континента не может быть отрицательной!");
@@ -92,7 +83,7 @@ public class Continent {
         } while (true);
         do {
             try {
-                numberOfCountries = AuxiliaryClass.inputNumberOfSomething("стран");
+                numberOfCountries = inputNumber("стран");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Количество стран не может быть отрицательным!");
@@ -108,11 +99,29 @@ public class Continent {
 
     public static void tableHeader() {
         System.out.print("******************************************************" +
-                "*************************************************\n");
+                "**************************************************************\n");
         System.out.print("* Номер *     Континент      * Количество стран *" +
-                " Площадь континента *          Список стран          *\n");
-        System.out.print("******************************************************" +
-                "*************************************************\n");
+                " Площадь континента *  Население *          Список стран          *\n");
+        System.out.print("*******************************************************" +
+                "*************************************************************\n");
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder string;
+        string = new StringBuilder(String.format(" * %-18s * %-16d * %-18d * %-10d * ", name, numberOfCountries,
+                square, population));
+        if (listOfCountries.isEmpty())
+            string.append(String.format("%-30s *\n", AuxiliaryClass.listIsEmpty));
+        else
+            string.append(String.format("%-30s *\n", listOfCountries.get(0).getName()));
+        for (int i = 1; i < listOfCountries.size(); i++) {
+            string.append(String.format("*       *                    *                  *                     * %-30s *\n",
+                    listOfCountries.get(i).getName()));
+        }
+        string.append("************************************************************" +
+                "********************************************************\n");
+        return string.toString();
     }
 
     public void output(int number) {
@@ -125,8 +134,8 @@ public class Continent {
             System.out.printf("*       *                    *                  *                    * %-30s *\n",
                     listOfCountries.get(i).getName());
         }
-        System.out.print("****************************************" +
-                "***************************************************************\n");
+        System.out.print("*********************************************************" +
+                "**********************************************************\n");
     }
 
     public int chooseCountry() {
@@ -135,9 +144,10 @@ public class Continent {
         int size = listOfCountries.size();
         if (!listOfCountries.isEmpty()) {
             Country.tableHeader();
-            i = 0;
+            i = 1;
             for (Country country : listOfCountries) {
-                country.output(i);
+                System.out.printf("* %-5d", i);
+                System.out.print(country);
                 i++;
             }
             do {
@@ -156,18 +166,20 @@ public class Continent {
         int number;
         System.out.println("\nИЗМЕНЕНИЯ ПОЛЕЙ");
         tableHeader();
-        output(0);
+        System.out.printf("* %-5d", 1);
+        System.out.print(this);
         do {
             System.out.println("1.Название континента");
             System.out.println("2.Количество стран");
             System.out.println("3.Площадь континента");
-            System.out.println("4.Список стран");
+            System.out.println("4.Население континента");
+            System.out.println("5.Список стран");
             do {
                 System.out.print("Введите номер поля, который желаете изменить: ");
                 number = Main.scanner.nextInt();
-                if ((number < 1) || (number > 4))
+                if ((number < 1) || (number > 5))
                     System.out.println("Поля с данным номером нет");
-            } while ((number < 1) || (number > 4));
+            } while ((number < 1) || (number > 5));
             Main.scanner.nextLine();
             switch (number) {
                 case 1 -> {
@@ -175,7 +187,7 @@ public class Continent {
                         flag = false;
                         do {
                             try {
-                                name = AuxiliaryClass.inputNameOfSomething("страны");
+                                name = inputName("страны");
                                 break;
                             } catch (StringWithSmallLetterException e) {
                                 System.out.println("Название континента необходимо писать с заглавной буквы!");
@@ -191,7 +203,7 @@ public class Continent {
                 case 2 -> {
                     do {
                         try {
-                            numberOfCountries = AuxiliaryClass.inputNumberOfSomething("стран");
+                            numberOfCountries = inputNumber("стран");
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Количество стран не может быть отрицательным!");
@@ -201,14 +213,24 @@ public class Continent {
                 case 3 -> {
                     do {
                         try {
-                            square = AuxiliaryClass.inputSquareOfSomething("континента");
+                            square = inputSquare("континента");
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Площадь континента не может быть отрицательной!");
                         }
                     } while (true);
                 }
-                case 4 -> System.out.println("Для изменения списка стран перейдите по соответствующей команде в меню");
+                case 4 -> {
+                    do {
+                        try {
+                            population = inputPopulation("континента");
+                            break;
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Население континента не может быть отрицательным!");
+                        }
+                    } while (true);
+                }
+                case 5 -> System.out.println("Для изменения списка стран перейдите по соответствующей команде в меню");
                 default -> {
                 }
             }
@@ -229,7 +251,7 @@ public class Continent {
             System.out.println("число количества стран на данном континенте");
             if (AuxiliaryClass.answerYesOrNo("Желаете это сделать?")) {
                 do {
-                    number = AuxiliaryClass.inputNumberOfSomething("стран");
+                    number = inputNumber("стран");
                     if (number <= listOfCountries.size())
                         System.out.println("Данное число меньше или соответствует уже имеющемуся");
                 } while (number <= listOfCountries.size());
@@ -243,7 +265,8 @@ public class Continent {
         int number;
         number = chooseCountry();
         Country.tableHeader();
-        listOfCountries.get(number).output(0);
+        System.out.printf("* %-5d", 1);
+        System.out.print(listOfCountries.get(number));
         if (AuxiliaryClass.answerYesOrNo("Вы действительно желаете удалить данную страну из списка?")) {
             listOfCountries.remove(number);
             Country.decrementTotalCountries();
@@ -260,5 +283,24 @@ public class Continent {
 
     public static void printTotalContinents() {
         System.out.println("Вы внесли в список " + totalContinents + " из 6 существующих континентов");
+    }
+
+    @Override
+    public Continent clone() {
+        try {
+            Continent clone = (Continent) super.clone();
+            List<Country> clonedCountries = new ArrayList<>();
+            for (Country country : listOfCountries)
+                clonedCountries.add(country.clone());
+            clone.listOfCountries = clonedCountries;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public String getFormattedInfo() {
+        return "Континент: " + name + "; " + numberOfCountries + "; " + square + ".";
     }
 }

@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 
-public class Company {
-    private String name;
-    private String address;
-    private long turnoverPerYear;
-    private long netProfit;
-    private Date dateOfFoundation;
-    private String industry;
+public class Company implements Modifiable<Company>, Cloneable, Printable {
+    protected String name;
+    protected String address;
+    protected long turnoverPerYear;
+    protected long netProfit;
+    protected Date dateOfFoundation;
+    protected String industry;
 
     private static int totalCompanies = 0;
 
@@ -78,11 +78,30 @@ public class Company {
         return industry;
     }
 
+
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof Company company))
             return false;
         return this.name.equals(company.getName());
+    }
+
+    public String inputName(String s) {
+        String name;
+        do {
+            System.out.print("Введите название " + s + ": ");
+            while (!Main.scanner.hasNextLine()) {
+                System.out.print("\nОшибка ввода!\nВведите название " + s + ": ");
+                Main.scanner.next();
+            }
+            name = Main.scanner.nextLine();
+            if (!Character.isUpperCase(name.charAt(0)))
+                throw new StringWithSmallLetterException("Ошибка! Строка начинается не с заглавной буквы!");
+            if (name.isBlank())
+                System.out.println("Данное поле не может быть пустым");
+        } while (name.isBlank());
+        name = name.trim();
+        return name;
     }
 
     public long inputTurnover() {
@@ -100,11 +119,11 @@ public class Company {
         return turnover;
     }
 
-    public long inputNetProfit() {
+    public long inputNetProfit(String s) {
         long profit;
-        System.out.print("Введите прибыль компании: ");
+        System.out.print("Введите прибыль " + s + ": ");
         while (!Main.scanner.hasNextLong()) {
-            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите прибыль компании: ");
+            System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите прибыль " + s + ": ");
             Main.scanner.next();
         }
         profit = Main.scanner.nextLong();
@@ -113,12 +132,12 @@ public class Company {
         return profit;
     }
 
-    public String inputIndustry() {
+    public String inputIndustry(String s) {
         String industry;
         do {
-            System.out.print("Введите отрасль компании: ");
+            System.out.print("Введите отрасль " + s + ": ");
             while (!Main.scanner.hasNextLine()) {
-                System.out.print("Ошибка ввода!\nВведите отрасль компании: ");
+                System.out.print("Ошибка ввода!\nВведите отрасль " + s + ": ");
                 Main.scanner.next();
             }
             industry = Main.scanner.nextLine();
@@ -139,10 +158,10 @@ public class Company {
         }
     }
 
-    public void inputDateOfFoundation() {
+    public void inputDateOfFoundation(String s) {
         String stringDate;
         do {
-            System.out.print("Введите дату основания компании в формате (дд.мм.гггг): ");
+            System.out.print("Введите дату основания " + s + " в формате (дд.мм.гггг): ");
             try {
                 while (!Main.scanner.hasNextLine()) {
                     System.out.print("Ошибка ввода!\nВведите дату основания: ");
@@ -160,25 +179,23 @@ public class Company {
     }
 
 
-    public void input(List<Company> companyList) {
-        boolean flag;
-        System.out.println("\nВВОД ПРЕДПРИЯТИЯ");
+    public void input(List<Company> companyList, boolean mode) {
+        String s;
+        if (!mode) {
+            s = "компании";
+            System.out.println("\nВВОД КОМПАНИИ");
+        } else {
+            s = "филиала";
+            System.out.println("\nВВОД ФИЛИАЛА КОМПАНИИ");
+        }
         do {
-            flag = false;
-            do {
-                try {
-                    name = AuxiliaryClass.inputNameOfSomething("компании");
-                    break;
-                } catch (StringWithSmallLetterException e) {
-                    System.out.println("Название компании необходимо писать с заглавной буквы!");
-                }
-            } while (true);
-            for (Company otherCompany : companyList)
-                if ((this != otherCompany) & (this.equals(otherCompany))) {
-                    System.out.println("Компания с данным названием уже есть в списке");
-                    flag = true;
-                }
-        } while (flag);
+            try {
+                name = inputName(s);
+                break;
+            } catch (StringWithSmallLetterException e) {
+                System.out.println("Название " + s + " необходимо писать с заглавной буквы!");
+            }
+        } while (true);
         do {
             try {
                 turnoverPerYear = inputTurnover();
@@ -187,28 +204,46 @@ public class Company {
                 System.out.println("Оборот за год не может быть отрицательным");
             }
         } while (true);
-        netProfit = inputNetProfit();
-        industry = inputIndustry();
-        inputDateOfFoundation();
-        incrementTotalCompanies();
+        netProfit = inputNetProfit(s);
+        industry = inputIndustry(s);
+        inputDateOfFoundation(s);
+        if (!mode)
+            incrementTotalCompanies();
     }
 
     public static void tableHeader() {
-        System.out.print("***************************************************************************************" +
-                "**************************************************************************************\n");
-        System.out.print("* Номер *        Компания         *                  Местоположение                 " +
-                "*   Оборот за год   *    Прибыль    *              Отрасль             * Дата основания *\n");
-        System.out.print("*******************************************************************************************" +
-                "**********************************************************************************\n");
+        System.out.print("********************************************************************************************" +
+                "**********************************************************************************************" +
+                "************************\n");
+        System.out.print("* Номер *                           Компания                           *                  " +
+                "Местоположение                 *   Оборот за год   *    Прибыль    *              Отрасль       " +
+                "      * Дата основания *\n");
+        System.out.print("********************************************************************************************" +
+                "**********************************************************************************************" +
+                "************************\n");
+
+    }
+
+    @Override
+    public String toString() {
+        String string;
+        SimpleDateFormat form = new SimpleDateFormat("dd.MM.yyyy");
+        string = String.format(" * %-60s * %-47s * %-17d * %-13d * %-32s * %-14s *\n", name, address,
+                turnoverPerYear, netProfit, industry, form.format(dateOfFoundation));
+        string += "********************************************************************************************" +
+                "**********************************************************************************************" +
+                "***********************\n";
+        return string;
     }
 
     public void output(int number) {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-        System.out.printf("* %-5d * %-23s * %-47s * ", number + 1, name, address);
+        System.out.printf("* %-5d * %-53s * %-47s * ", number + 1, name, address);
         System.out.printf("%-17d * %-13d * ", turnoverPerYear, netProfit);
         System.out.printf("%-32s * %-14s *\n", industry, format.format(dateOfFoundation));
-        System.out.print("****************************************************************************************" +
-                "*************************************************************************************\n");
+        System.out.print("********************************************************************************************" +
+                "**********************************************************************************************" +
+                "********************\n");
     }
 
     public void changeFields(List<Company> companyList) {
@@ -216,7 +251,8 @@ public class Company {
         boolean flag;
         System.out.println("\nИЗМЕНЕНИЯ ПОЛЕЙ");
         tableHeader();
-        output(0);
+        System.out.printf("* %-5d", 1);
+        System.out.print(this);
         do {
             System.out.println("1.Название компании");
             System.out.println("2.Местоположение компании");
@@ -237,7 +273,7 @@ public class Company {
                         flag = false;
                         do {
                             try {
-                                name = AuxiliaryClass.inputNameOfSomething("компании");
+                                name = inputName("компании");
                                 break;
                             } catch (StringWithSmallLetterException e) {
                                 System.out.println("Название компании необходимо писать с заглавной буквы!");
@@ -265,13 +301,13 @@ public class Company {
                         }
                     } while (true);
                 }
-                case 4 -> netProfit = inputNetProfit();
-                case 5 -> industry = inputIndustry();
-                case 6 -> inputDateOfFoundation();
+                case 4 -> netProfit = inputNetProfit("компании");
+                case 5 -> industry = inputIndustry("компании");
+                case 6 -> inputDateOfFoundation("компании");
                 default -> {
                 }
             }
-        } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить изменение полей в данном компании?"));
+        } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить изменение полей в данной компании?"));
     }
 
     public static void incrementTotalCompanies() {
@@ -284,5 +320,21 @@ public class Company {
 
     public static void printTotalCompanies() {
         System.out.println("Всего вы внесли в список " + totalCompanies + " компаний");
+    }
+
+    @Override
+    public Company clone() {
+        try {
+            return (Company) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public String getFormattedInfo() {
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        return "Компания: " + name + "; " + address + "; " + turnoverPerYear + "; " + netProfit + "; " + industry +
+                "; " + format.format(dateOfFoundation) + ".";
     }
 }
