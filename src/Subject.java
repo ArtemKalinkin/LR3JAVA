@@ -6,6 +6,14 @@ public class Subject extends AbstractElement implements Modifiable<Subject>, Clo
     private List<City> listOfCities = new ArrayList<>();
     private static int totalSubjects = 0;
 
+
+    public enum SubjectField {
+        NAME,
+        POPULATION,
+        SQUARE,
+        NUMBER_OF_CITIES
+    }
+
     public Subject() {
     }
 
@@ -299,5 +307,85 @@ public class Subject extends AbstractElement implements Modifiable<Subject>, Clo
     @Override
     public String getFormattedInfo() {
         return "Субъект: " + name + "; " + numberOfCities + "; " + square + "; " + population + ".";
+    }
+
+    public static int chooseField(String s) {
+        int number;
+        System.out.println("\n\nВыбор поля для " + s + " субъектов: ");
+        System.out.println("1.Название");
+        System.out.println("2.Население");
+        System.out.println("3.Площадь");
+        System.out.println("4.Количество городов");
+        do {
+            System.out.print("Введите номер поля: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер поля: ");
+                Main.scanner.next();
+            }
+            number = Main.scanner.nextInt();
+            if ((number < 1) || (number > 4))
+                System.out.println("Поля под данным номером нет!");
+        } while ((number < 1) || (number > 4));
+        return number;
+    }
+
+    public static SubjectField getSortField(int number) {
+        switch (number) {
+            case 1 -> {
+                return SubjectField.NAME;
+            }
+            case 2 -> {
+                return SubjectField.POPULATION;
+            }
+            case 3 -> {
+                return SubjectField.SQUARE;
+            }
+            case 4 -> {
+                return SubjectField.NUMBER_OF_CITIES;
+            }
+        }
+        return null;
+    }
+
+    public void sortCities() {
+        System.out.println("\n\nСписок до сортировки\n\n");
+        City.tableHeader();
+        int i = 1;
+        for (City city : listOfCities) {
+            System.out.printf("* %-5d", i);
+            System.out.print(city);
+            i++;
+        }
+        int number, modeNumber;
+        number = Country.chooseField("сортировки списка");
+        if (number == 1) {
+            System.out.println("1.В алфавитном порядке");
+            System.out.println("2.В обратном алфавитному порядке");
+        } else {
+            System.out.println("1.По возрастанию");
+            System.out.println("2.По убыванию");
+        }
+        do {
+            System.out.print("Введите номер: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер: ");
+                Main.scanner.next();
+            }
+            modeNumber = Main.scanner.nextInt();
+            if ((modeNumber < 1) || (modeNumber > 2))
+                System.out.println("Действия под данным номером нет!");
+        } while ((modeNumber < 1) || (modeNumber > 2));
+        CityComparator comparator = new CityComparator(City.getSortField(number));
+        listOfCities.sort(comparator);
+        if (modeNumber == 2)
+            listOfCities.reversed();
+        System.out.println("\n\nСписок после сортировки\n\n");
+        City.tableHeader();
+        i = 1;
+        for (City city : listOfCities) {
+            System.out.printf("* %-5d", i);
+            System.out.print(city);
+            i++;
+        }
     }
 }

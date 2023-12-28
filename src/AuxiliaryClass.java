@@ -694,6 +694,124 @@ public class AuxiliaryClass {
         }
     }
 
+    public static void sortContinents(List<Continent> continentList) {
+        System.out.println("\n\nСОРТИРОВКА СПИСКА КОНТИНЕНТОВ");
+        System.out.println("\n\nСписок до сортировки\n\n");
+        outputAll(continentList, 1);
+        int number, modeNumber;
+        number = Continent.chooseField("сортировки списка");
+        if (number == 1) {
+            System.out.println("1.В алфавитном порядке");
+            System.out.println("2.В обратном алфавитному порядке");
+        } else {
+            System.out.println("1.По возрастанию");
+            System.out.println("2.По убыванию");
+        }
+        do {
+            System.out.print("Введите номер: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер: ");
+                Main.scanner.next();
+            }
+            modeNumber = Main.scanner.nextInt();
+            if ((modeNumber < 1) || (modeNumber > 2))
+                System.out.println("Действия под данным номером нет!");
+        } while ((modeNumber < 1) || (modeNumber > 2));
+        ContinentComparator comparator = new ContinentComparator(Continent.getSortField(number));
+        continentList.sort(comparator);
+        if (modeNumber == 2)
+            continentList.reversed();
+        System.out.println("\n\nСписок после сортировки\n\n");
+        outputAll(continentList, 1);
+    }
+
+    public static void sortAnyList(List<Continent> continentList) {
+        int number;
+        int numberOfContinent;
+        int numberOfCountry;
+        int numberOfSubject;
+        int numberOfCity;
+        Continent continent;
+        Country country;
+        Subject subject;
+        City city;
+        do {
+            System.out.println("\n\nСОРТИРОВКА СПИСКОВ\n\n");
+            System.out.println("1.Континентов");
+            System.out.println("2.Стран");
+            System.out.println("3.Субъектов");
+            System.out.println("4.Городов");
+            System.out.println("5.Компаний");
+            do {
+                System.out.print("Введите номер: ");
+                while (!Main.scanner.hasNextInt()) {
+                    System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер: ");
+                    Main.scanner.next();
+                }
+                number = Main.scanner.nextInt();
+                if ((number < 1) || (number > 5))
+                    System.out.println("Списка под данным номером нет!");
+            } while ((number < 1) || (number > 5));
+            switch (number) {
+
+                case 1 -> {
+                    sortContinents(continentList);
+                }
+                case 2 -> {
+                    numberOfContinent = chooseContinent(continentList);
+                    System.out.println("\n\nСОРТИРОВКА СПИСКА СТРАН");
+                    continent = continentList.get(numberOfContinent);
+                    continent.sortCountries();
+                }
+                case 3 -> {
+                    numberOfContinent = chooseContinent(continentList);
+                    continent = continentList.get(numberOfContinent);
+                    numberOfCountry = continent.chooseCountry();
+                    country = continent.getListOfCountries().get(numberOfCountry);
+                    System.out.println("\n\nСОРТИРОВКА СПИСКА СУБЪЕКТОВ");
+                    country.sortSubjects();
+                }
+                case 4 -> {
+                    numberOfContinent = chooseContinent(continentList);
+                    continent = continentList.get(numberOfContinent);
+                    numberOfCountry = continent.chooseCountry();
+                    country = continent.getListOfCountries().get(numberOfCountry);
+                    numberOfSubject = country.chooseSubject();
+                    subject = country.getListOfSubjects().get(numberOfSubject);
+                    System.out.println("\n\nСОРТИРОВКА СПИСКА ГОРОДОВ");
+                    subject.sortCities();
+                }
+                case 5 -> {
+                    numberOfContinent = chooseContinent(continentList);
+                    continent = continentList.get(numberOfContinent);
+                    numberOfCountry = continent.chooseCountry();
+                    country = continent.getListOfCountries().get(numberOfCountry);
+                    numberOfSubject = country.chooseSubject();
+                    subject = country.getListOfSubjects().get(numberOfSubject);
+                    numberOfCity = subject.chooseCity();
+                    city = subject.getListOfCities().get(numberOfCity);
+                    System.out.println("\n\nСОРТИРОВКА СПИСКА КОМПАНИЙ");
+                    city.sortCompanies();
+                }
+            }
+        } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить сортировку списков?"));
+    }
+
+    public static void searchContinent(List<Continent> continentList) {
+        System.out.println("\n\nПОИСК КОНТИНЕНТА\n\n");
+        int number;
+        number = Continent.chooseField("поиска");
+        switch (number) {
+            case 1 -> {
+                String targetName;
+                targetName = AbstractElement.inputName("континента");
+                int currentIndex = -1;
+
+            }
+
+        }
+    }
+
 
 }
 

@@ -4,6 +4,13 @@ import java.util.List;
 public class Continent extends AbstractElement implements Modifiable<Continent>, Cloneable, Printable {
     private int numberOfCountries;
 
+    public enum ContinentField {
+        NAME,
+        POPULATION,
+        SQUARE,
+        NUMBER_OF_COUNTRIES
+    }
+
     private List<Country> listOfCountries = new ArrayList<>();
 
     private static int totalContinents = 0;
@@ -303,4 +310,85 @@ public class Continent extends AbstractElement implements Modifiable<Continent>,
     public String getFormattedInfo() {
         return "Континент: " + name + "; " + numberOfCountries + "; " + square + ".";
     }
+
+    public static int chooseField(String s) {
+        int number;
+        System.out.println("\n\nВыбор поля для " + s + " континентов: ");
+        System.out.println("1.Название");
+        System.out.println("2.Население");
+        System.out.println("3.Площадь");
+        System.out.println("4.Количество стран");
+        do {
+            System.out.print("Введите номер поля: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер поля: ");
+                Main.scanner.next();
+            }
+            number = Main.scanner.nextInt();
+            if ((number < 1) || (number > 4))
+                System.out.println("Поля под данным номером нет!");
+        } while ((number < 1) || (number > 4));
+        return number;
+    }
+
+    public static ContinentField getSortField(int number) {
+        switch (number) {
+            case 1 -> {
+                return ContinentField.NAME;
+            }
+            case 2 -> {
+                return ContinentField.POPULATION;
+            }
+            case 3 -> {
+                return ContinentField.SQUARE;
+            }
+            case 4 -> {
+                return ContinentField.NUMBER_OF_COUNTRIES;
+            }
+        }
+        return null;
+    }
+
+    public void sortCountries() {
+        System.out.println("\n\nСписок до сортировки\n\n");
+        Country.tableHeader();
+        int i = 1;
+        for (Country country : listOfCountries) {
+            System.out.printf("* %-5d", i);
+            System.out.print(country);
+            i++;
+        }
+        int number, modeNumber;
+        number = Country.chooseField("сортировки списка");
+        if (number == 1) {
+            System.out.println("1.В алфавитном порядке");
+            System.out.println("2.В обратном алфавитному порядке");
+        } else {
+            System.out.println("1.По возрастанию");
+            System.out.println("2.По убыванию");
+        }
+        do {
+            System.out.print("Введите номер: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер: ");
+                Main.scanner.next();
+            }
+            modeNumber = Main.scanner.nextInt();
+            if ((modeNumber < 1) || (modeNumber > 2))
+                System.out.println("Действия под данным номером нет!");
+        } while ((modeNumber < 1) || (modeNumber > 2));
+        CountryComparator comparator = new CountryComparator(Country.getSortField(number));
+        listOfCountries.sort(comparator);
+        if (modeNumber == 2)
+            listOfCountries.reversed();
+        System.out.println("\n\nСписок после сортировки\n\n");
+        i = 1;
+        for (Country country : listOfCountries) {
+            System.out.printf("* %-5d", i);
+            System.out.print(country);
+            i++;
+        }
+    }
+
+
 }

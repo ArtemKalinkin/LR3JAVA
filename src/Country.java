@@ -11,6 +11,17 @@ public class Country extends AbstractElement implements Modifiable<Country>, Clo
 
     private static int totalCountries = 0;
 
+    public enum CountryField {
+        NAME,
+        POPULATION,
+        SQUARE,
+        NUMBER_OF_SUBJECTS,
+        NET_PROFIT_FROM_COMPANIES,
+        INCOME,
+        EXPENSES,
+        BUDGET_DEFICIT_OR_SURPLUS,
+    }
+
     public Country() {
     }
 
@@ -567,5 +578,101 @@ public class Country extends AbstractElement implements Modifiable<Country>, Clo
     public String getFormattedInfo() {
         return "Страна: " + name + "; " + numberOfSubjects + "; " + square + "; " + population + "; "
                 + netProfitFromCompanies + "; " + income + "; " + expenses + "; " + budgetDeficitOrSurplus + ".";
+    }
+
+    public static int chooseField(String s) {
+        int number;
+        System.out.println("\n\nВыбор поля для " + s + " стран: ");
+        System.out.println("1.Название");
+        System.out.println("2.Население");
+        System.out.println("3.Площадь");
+        System.out.println("4.Количество субъектов");
+        System.out.println("5.Прибыль от компаний");
+        System.out.println("6.Доход");
+        System.out.println("7.Расходы");
+        System.out.println("8.Профицит\\дефицит бюджета");
+        do {
+            System.out.print("Введите номер поля: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер поля: ");
+                Main.scanner.next();
+            }
+            number = Main.scanner.nextInt();
+            if ((number < 1) || (number > 8))
+                System.out.println("Поля под данным номером нет!");
+        } while ((number < 1) || (number > 8));
+        return number;
+    }
+
+    public static CountryField getSortField(int number) {
+        switch (number) {
+            case 1 -> {
+                return CountryField.NAME;
+            }
+            case 2 -> {
+                return CountryField.POPULATION;
+            }
+            case 3 -> {
+                return CountryField.SQUARE;
+            }
+            case 4 -> {
+                return CountryField.NUMBER_OF_SUBJECTS;
+            }
+            case 5 -> {
+                return CountryField.NET_PROFIT_FROM_COMPANIES;
+            }
+            case 6 -> {
+                return CountryField.INCOME;
+            }
+            case 7 -> {
+                return CountryField.EXPENSES;
+            }
+            case 8 -> {
+                return CountryField.BUDGET_DEFICIT_OR_SURPLUS;
+            }
+        }
+        return null;
+    }
+
+    public void sortSubjects() {
+        System.out.println("\n\nСписок до сортировки\n\n");
+        Subject.tableHeader();
+        int i = 1;
+        for (Subject subject : listOfSubjects) {
+            System.out.printf("* %-5d", i);
+            System.out.print(subject);
+            i++;
+        }
+        int number, modeNumber;
+        number = Country.chooseField("сортировки списка");
+        if (number == 1) {
+            System.out.println("1.В алфавитном порядке");
+            System.out.println("2.В обратном алфавитному порядке");
+        } else {
+            System.out.println("1.По возрастанию");
+            System.out.println("2.По убыванию");
+        }
+        do {
+            System.out.print("Введите номер: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер: ");
+                Main.scanner.next();
+            }
+            modeNumber = Main.scanner.nextInt();
+            if ((modeNumber < 1) || (modeNumber > 2))
+                System.out.println("Действия под данным номером нет!");
+        } while ((modeNumber < 1) || (modeNumber > 2));
+        SubjectComparator comparator = new SubjectComparator(Subject.getSortField(number));
+        listOfSubjects.sort(comparator);
+        if (modeNumber == 2)
+            listOfSubjects.reversed();
+        System.out.println("\n\nСписок после сортировки\n\n");
+        Subject.tableHeader();
+        i = 1;
+        for (Subject subject : listOfSubjects) {
+            System.out.printf("* %-5d", i);
+            System.out.print(subject);
+            i++;
+        }
     }
 }

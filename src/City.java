@@ -3,10 +3,17 @@ import java.util.List;
 
 
 public class City extends AbstractElement implements Modifiable<City>, Cloneable, Printable {
-    private int numberOfCompany;
+    private int numberOfCompanies;
     private List<Company> listOfCompany = new ArrayList<>();
 
     private static int totalCities = 0;
+
+    public enum CityField {
+        NAME,
+        POPULATION,
+        SQUARE,
+        NUMBER_OF_COMPANIES
+    }
 
     public City() {
     }
@@ -15,19 +22,19 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
         this.name = name;
     }
 
-    public City(String name, int population, int square, int numberOfCompany, List<Company> listOfCompany) {
+    public City(String name, int population, int square, int numberOfCompanies, List<Company> listOfCompany) {
         super(name, population, square);
-        this.numberOfCompany = numberOfCompany;
+        this.numberOfCompanies = numberOfCompanies;
         this.listOfCompany = listOfCompany;
     }
 
 
-    public void setNumberOfCompany(int numberOfCompany) {
-        this.numberOfCompany = numberOfCompany;
+    public void setNumberOfCompanies(int numberOfCompanies) {
+        this.numberOfCompanies = numberOfCompanies;
     }
 
-    public int getNumberOfCompany() {
-        return numberOfCompany;
+    public int getNumberOfCompanies() {
+        return numberOfCompanies;
     }
 
     public void setListOfCompany(List<Company> listOfCompany) {
@@ -75,7 +82,7 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
         } while (true);
         do {
             try {
-                numberOfCompany = inputNumber("компаний");
+                numberOfCompanies = inputNumber("компаний");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Количество компаний не может быть отрицательным!");
@@ -120,7 +127,7 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
     @Override
     public String toString() {
         StringBuilder string;
-        string = new StringBuilder(String.format(" * %-18s * %-22d * %-14d * %-9d * ", name, numberOfCompany,
+        string = new StringBuilder(String.format(" * %-18s * %-22d * %-14d * %-9d * ", name, numberOfCompanies,
                 square, population));
         if (listOfCompany.isEmpty())
             string.append(String.format("%-36s *\n", AuxiliaryClass.listIsEmpty));
@@ -151,7 +158,7 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
     }
 
     public void output(int number) {
-        System.out.printf("* %-5d * %-18s * %-22d * %-14d * %-9d * ", number + 1, name, numberOfCompany,
+        System.out.printf("* %-5d * %-18s * %-22d * %-14d * %-9d * ", number + 1, name, numberOfCompanies,
                 square, population);
         if (listOfCompany.isEmpty())
             System.out.printf("%-36s *\n", AuxiliaryClass.listIsEmpty);
@@ -253,7 +260,7 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
                 case 4 -> {
                     do {
                         try {
-                            numberOfCompany = inputNumber("компаний");
+                            numberOfCompanies = inputNumber("компаний");
                             break;
                         } catch (IllegalArgumentException e) {
                             System.out.println("Количество компаний не может быть отрицательным!");
@@ -270,13 +277,13 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
 
     public void addNewCompany() {
         int number;
-        if (listOfCompany.size() < numberOfCompany) {
+        if (listOfCompany.size() < numberOfCompanies) {
             Company company = new Company();
             company.input(listOfCompany, false);
             listOfCompany.add(company);
         } else {
             System.out.println("Достигнуто количество компаний соответствующее введенному числу - "
-                    + numberOfCompany);
+                    + numberOfCompanies);
             System.out.println("Для добавления новых компаний в данный список вам необходимо изменить ");
             System.out.println("число количества компаний в данном субъекте");
             if (AuxiliaryClass.answerYesOrNo("Желаете это сделать?")) {
@@ -285,7 +292,7 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
                     if (number <= listOfCompany.size())
                         System.out.println("Данное число меньше или соответствует уже имеющемуся");
                 } while (number <= listOfCompany.size());
-                numberOfCompany = number;
+                numberOfCompanies = number;
                 addNewCompany();
             }
         }
@@ -337,7 +344,87 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
 
     @Override
     public String getFormattedInfo() {
-        return "Город: " + name + "; " + numberOfCompany + "; " + square + "; " + population + ".";
+        return "Город: " + name + "; " + numberOfCompanies + "; " + square + "; " + population + ".";
+    }
+
+    public static int chooseField(String s) {
+        int number;
+        System.out.println("\n\nВыбор поля для " + s + " городов: ");
+        System.out.println("1.Название");
+        System.out.println("2.Население");
+        System.out.println("3.Площадь");
+        System.out.println("4.Количество компаний");
+        do {
+            System.out.print("Введите номер поля: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер поля: ");
+                Main.scanner.next();
+            }
+            number = Main.scanner.nextInt();
+            if ((number < 1) || (number > 4))
+                System.out.println("Поля под данным номером нет!");
+        } while ((number < 1) || (number > 4));
+        return number;
+    }
+
+    public static CityField getSortField(int number) {
+        switch (number) {
+            case 1 -> {
+                return CityField.NAME;
+            }
+            case 2 -> {
+                return CityField.POPULATION;
+            }
+            case 3 -> {
+                return CityField.SQUARE;
+            }
+            case 4 -> {
+                return CityField.NUMBER_OF_COMPANIES;
+            }
+        }
+        return null;
+    }
+
+    public void sortCompanies() {
+        System.out.println("\n\nСписок до сортировки\n\n");
+        Company.tableHeader();
+        int i = 1;
+        for (Company company : listOfCompany) {
+            System.out.printf("* %-5d", i);
+            System.out.print(company);
+            i++;
+        }
+        int number, modeNumber;
+        number = Country.chooseField("сортировки списка");
+        if ((number == 1) || (number == 6)) {
+            System.out.println("1.В алфавитном порядке");
+            System.out.println("2.В обратном алфавитному порядке");
+        } else {
+            System.out.println("1.По возрастанию");
+            System.out.println("2.По убыванию");
+        }
+        do {
+            System.out.print("Введите номер: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер: ");
+                Main.scanner.next();
+            }
+            modeNumber = Main.scanner.nextInt();
+            if ((modeNumber < 1) || (modeNumber > 2))
+                System.out.println("Действия под данным номером нет!");
+        } while ((modeNumber < 1) || (modeNumber > 2));
+        CompanyComparator comparator = new CompanyComparator(Company.getSortField(number));
+        listOfCompany.sort(comparator);
+        if (modeNumber == 2)
+            listOfCompany.reversed();
+        System.out.println("\n\nСписок после сортировки\n\n");
+        Company.tableHeader();
+        i = 1;
+        for (Company company : listOfCompany) {
+            System.out.printf("* %-5d", i);
+            System.out.print(company);
+            i++;
+        }
     }
 }
 

@@ -60,7 +60,7 @@ public class Branch extends Company {
             status = Main.scanner.nextLine();
             if (status.isBlank()) {
                 System.out.println("Вы не ввели статус филиала. По умолчанию устанавливается статус - неизвестно");
-                status = "неизвестно";
+                status = "статус - неизвестно,";
             }
         } while (status.isBlank());
 

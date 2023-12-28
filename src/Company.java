@@ -337,4 +337,50 @@ public class Company implements Modifiable<Company>, Cloneable, Printable {
         return "Компания: " + name + "; " + address + "; " + turnoverPerYear + "; " + netProfit + "; " + industry +
                 "; " + format.format(dateOfFoundation) + ".";
     }
+
+    public static int chooseField(String s) {
+        int number;
+        System.out.println("\n\nВыбор поля для " + s + " компаний: ");
+        System.out.println("1.Название");
+        System.out.println("2.Адрес");
+        System.out.println("3.Оборот за год");
+        System.out.println("4.Прибыль");
+        System.out.println("5.Дата основания");
+        System.out.println("6.Отрасль");
+        do {
+            System.out.print("Введите номер поля: ");
+            while (!Main.scanner.hasNextInt()) {
+                System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите номер поля: ");
+                Main.scanner.next();
+            }
+            number = Main.scanner.nextInt();
+            if ((number < 1) || (number > 6))
+                System.out.println("Поля под данным номером нет!");
+        } while ((number < 1) || (number > 6));
+        return number;
+    }
+
+    public static CompanyField getSortField(int number) {
+        switch (number) {
+            case 1 -> {
+                return CompanyField.NAME;
+            }
+            case 2 -> {
+                return CompanyField.ADDRESS;
+            }
+            case 3 -> {
+                return CompanyField.TURNOVER;
+            }
+            case 4 -> {
+                return CompanyField.NET_PROFIT;
+            }
+            case 5 -> {
+                return CompanyField.DATE_OF_FOUNDATION;
+            }
+            case 6 -> {
+                return CompanyField.INDUSTRY;
+            }
+        }
+        return null;
+    }
 }
