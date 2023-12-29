@@ -357,6 +357,7 @@ public class Company implements Modifiable<Company>, Cloneable, Printable {
             if ((number < 1) || (number > 6))
                 System.out.println("Поля под данным номером нет!");
         } while ((number < 1) || (number > 6));
+        Main.scanner.nextLine();
         return number;
     }
 

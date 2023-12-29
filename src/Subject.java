@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Subject extends AbstractElement implements Modifiable<Subject>, Cloneable, Printable {
@@ -357,7 +358,7 @@ public class Subject extends AbstractElement implements Modifiable<Subject>, Clo
             i++;
         }
         int number, modeNumber;
-        number = Country.chooseField("сортировки списка");
+        number = City.chooseField("сортировки списка");
         if (number == 1) {
             System.out.println("1.В алфавитном порядке");
             System.out.println("2.В обратном алфавитному порядке");
@@ -378,7 +379,7 @@ public class Subject extends AbstractElement implements Modifiable<Subject>, Clo
         CityComparator comparator = new CityComparator(City.getSortField(number));
         listOfCities.sort(comparator);
         if (modeNumber == 2)
-            listOfCities.reversed();
+            Collections.reverse(listOfCities);
         System.out.println("\n\nСписок после сортировки\n\n");
         City.tableHeader();
         i = 1;

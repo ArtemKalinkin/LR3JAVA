@@ -27,8 +27,9 @@ public class Main {
                 System.out.println("5.Добавить новый элемент в список");
                 System.out.println("6.Узнать количество введенных элементов");
                 System.out.println("7.Поиск чего-либо по названию");
-                System.out.println("8.Поиск чего-либо по названию");
-                System.out.println("9.Завершить работу");
+                System.out.println("8.Сортировка списков");
+                System.out.println("9.Поиск компаний");
+                System.out.println("10.Завершить работу");
 
                 do {
                     System.out.print("\nВведите номер действия: ");
@@ -51,7 +52,8 @@ public class Main {
                     case 6 -> AuxiliaryClass.printInfoOfTotalElements();
                     case 7 -> AuxiliaryClass.searchSomethingWithSameName(listOfContinents);
                     case 8 -> AuxiliaryClass.sortAnyList(listOfContinents);
-                    case 9 -> {
+                    case 9 -> AuxiliaryClass.searchCompanies(listOfContinents);
+                    case 10 -> {
                         if (!AuxiliaryClass.answerYesOrNo("Вы действительно желаете завершить работу?"))
                             numberOfMenu = 0;
                     }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Continent extends AbstractElement implements Modifiable<Continent>, Cloneable, Printable {
@@ -380,7 +381,7 @@ public class Continent extends AbstractElement implements Modifiable<Continent>,
         CountryComparator comparator = new CountryComparator(Country.getSortField(number));
         listOfCountries.sort(comparator);
         if (modeNumber == 2)
-            listOfCountries.reversed();
+            Collections.reverse(listOfCountries);
         System.out.println("\n\nСписок после сортировки\n\n");
         i = 1;
         for (Country country : listOfCountries) {

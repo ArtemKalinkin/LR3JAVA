@@ -1,4 +1,8 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class AuxiliaryClass {
@@ -720,7 +724,7 @@ public class AuxiliaryClass {
         ContinentComparator comparator = new ContinentComparator(Continent.getSortField(number));
         continentList.sort(comparator);
         if (modeNumber == 2)
-            continentList.reversed();
+            Collections.reverse(continentList);
         System.out.println("\n\nСписок после сортировки\n\n");
         outputAll(continentList, 1);
     }
@@ -799,20 +803,210 @@ public class AuxiliaryClass {
 
     public static void searchContinent(List<Continent> continentList) {
         System.out.println("\n\nПОИСК КОНТИНЕНТА\n\n");
-        int number;
-        number = Continent.chooseField("поиска");
-        switch (number) {
-            case 1 -> {
-                String targetName;
-                targetName = AbstractElement.inputName("континента");
-                int currentIndex = -1;
+        String targetName = AbstractElement.inputName("континента");
 
-            }
+        int indexOfContinent = continentList.indexOf(
+                continentList.stream()
+                        .filter(continent -> continent.getName().equals(targetName))
+                        .findFirst()
+                        .orElse(null)
+        );
+        if (indexOfContinent != -1) {
+            System.out.println("Континент найден!");
+            Continent.tableHeader();
+            System.out.printf("* %-5d", 1);
+            System.out.print(continentList.get(indexOfContinent));
+        } else
+            System.out.println("Континент не найден.");
 
-        }
+
     }
 
+    public static void searchCompanies(List<Continent> continentList) {
+        int number;
+        System.out.println("\n\nПОИСК КОМПАНИИ ИЛИ ФИЛИАЛА\n\n");
+        do {
+            number = Company.chooseField("поиска");
+            for (Continent continent : continentList) {
+                for (Country country : continent.getListOfCountries()) {
+                    for (Subject subject : country.getListOfSubjects()) {
+                        for (City city : subject.getListOfCities()) {
+                            switch (number) {
 
+                                case 1 -> {
+                                    String targetName = AbstractElement.inputName("компании");
+                                    int indexOfCompany = city.getListOfCompany().indexOf(
+                                            city.getListOfCompany().stream()
+                                                    .filter(company -> company.getName().equalsIgnoreCase(targetName))
+                                                    .findFirst()
+                                                    .orElse(null)
+                                    );
+                                    if (indexOfCompany != -1) {
+                                        System.out.println("Компания найдена!");
+                                        Company.tableHeader();
+                                        System.out.printf("* %-5d", 1);
+                                        System.out.print(city.getListOfCompany().get(indexOfCompany));
+                                    } else {
+                                        System.out.println("Компания не найдена.");
+                                    }
+                                }
+
+                                case 2 -> {
+                                    String targetAddress;
+                                    do {
+                                        System.out.print("Введите адрес компании: ");
+                                        while (!Main.scanner.hasNextLine()) {
+                                            System.out.print("\nОшибка ввода!\nВведите адрес компании: ");
+                                            Main.scanner.next();
+                                        }
+                                        targetAddress = Main.scanner.nextLine();
+                                        if (targetAddress.isBlank())
+                                            System.out.println("Данное поле не может быть пустым");
+                                    } while (targetAddress.isBlank());
+                                    String finalTargetAddress = targetAddress.trim();
+                                    int indexOfCompany = city.getListOfCompany().indexOf(
+                                            city.getListOfCompany().stream()
+                                                    .filter(company -> company.getAddress().equalsIgnoreCase(finalTargetAddress))
+                                                    .findFirst()
+                                                    .orElse(null)
+                                    );
+                                    if (indexOfCompany != -1) {
+                                        System.out.println("Компания найдена!");
+                                        Company.tableHeader();
+                                        System.out.printf("* %-5d", 1);
+                                        System.out.print(city.getListOfCompany().get(indexOfCompany));
+                                    } else {
+                                        System.out.println("Компания не найдена.");
+                                    }
+                                }
+
+                                case 3 -> {
+                                    long targetTurnover;
+                                    System.out.print("Введите оборот за год: ");
+                                    while (!Main.scanner.hasNextLong()) {
+                                        System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите оборот за год: ");
+                                        Main.scanner.next();
+                                    }
+                                    targetTurnover = Main.scanner.nextLong();
+                                    if (targetTurnover < 0)
+                                        System.out.println("Оборот за год не может быть отрицательным");
+
+                                    Main.scanner.nextLine();
+                                    int indexOfCompany = city.getListOfCompany().indexOf(
+                                            city.getListOfCompany().stream()
+                                                    .filter(company -> company.getTurnoverPerYear() == targetTurnover)
+                                                    .findFirst()
+                                                    .orElse(null)
+                                    );
+                                    if (indexOfCompany != -1) {
+                                        System.out.println("Компания найдена!");
+                                        Company.tableHeader();
+                                        System.out.printf("* %-5d", 1);
+                                        System.out.print(city.getListOfCompany().get(indexOfCompany));
+                                    } else {
+                                        System.out.println("Компания не найдена.");
+                                    }
+                                }
+
+                                case 4 -> {
+                                    long targetProfit;
+                                    System.out.print("Введите прибыль компании: ");
+                                    while (!Main.scanner.hasNextLong()) {
+                                        System.out.print("Ошибка ввода! Необходимо ввести число!\nВведите прибыль компании: ");
+                                        Main.scanner.next();
+                                    }
+                                    targetProfit = Main.scanner.nextLong();
+
+                                    Main.scanner.nextLine();
+                                    int indexOfCompany = city.getListOfCompany().indexOf(
+                                            city.getListOfCompany().stream()
+                                                    .filter(company -> company.getTurnoverPerYear() == targetProfit)
+                                                    .findFirst()
+                                                    .orElse(null)
+                                    );
+                                    if (indexOfCompany != -1) {
+                                        System.out.println("Компания найдена!");
+                                        Company.tableHeader();
+                                        System.out.printf("* %-5d", 1);
+                                        System.out.print(city.getListOfCompany().get(indexOfCompany));
+                                    } else {
+                                        System.out.println("Компания не найдена.");
+                                    }
+                                }
+
+                                case 5 -> {
+                                    String stringDate;
+                                    Date targerDate;
+                                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                                    do {
+                                        System.out.print("Введите дату основания компании в формате (дд.мм.гггг): ");
+                                        while (!Main.scanner.hasNextLine()) {
+                                            System.out.print("Ошибка ввода!\nВведите дату основания: ");
+                                            Main.scanner.next();
+                                        }
+                                        stringDate = Main.scanner.nextLine();
+                                        stringDate = stringDate.trim();
+                                        try {
+                                            targerDate = format.parse(stringDate);
+                                            break;
+                                        } catch (ParseException e) {
+                                            System.out.println("Ошибка ввода!\nДата введена некорректно!");
+                                        }
+                                    } while (true);
+                                    Date finalTargerDate = targerDate;
+                                    int indexOfCompany = city.getListOfCompany().indexOf(
+                                            city.getListOfCompany().stream()
+                                                    .filter(company -> company.getDateOfFoundation().equals(finalTargerDate))
+                                                    .findFirst()
+                                                    .orElse(null)
+                                    );
+                                    if (indexOfCompany != -1) {
+                                        System.out.println("Компания найдена!");
+                                        Company.tableHeader();
+                                        System.out.printf("* %-5d", 1);
+                                        System.out.print(city.getListOfCompany().get(indexOfCompany));
+                                    } else {
+                                        System.out.println("Компания не найдена.");
+                                    }
+                                }
+
+                                case 6 -> {
+                                    String targetIndustry;
+                                    do {
+                                        System.out.print("Введите отрасль компании: ");
+                                        while (!Main.scanner.hasNextLine()) {
+                                            System.out.print("Ошибка ввода!\nВведите отрасль компании: ");
+                                            Main.scanner.next();
+                                        }
+                                        targetIndustry = Main.scanner.nextLine();
+                                        if (targetIndustry.isBlank())
+                                            System.out.println("Данное поле не может быть пустым");
+                                    } while (targetIndustry.isBlank());
+                                    String finalTargetIndustry = targetIndustry.trim();
+                                    ;
+                                    int indexOfCompany = city.getListOfCompany().indexOf(
+                                            city.getListOfCompany().stream()
+                                                    .filter(company -> company.getAddress().equalsIgnoreCase(finalTargetIndustry))
+                                                    .findFirst()
+                                                    .orElse(null)
+                                    );
+                                    if (indexOfCompany != -1) {
+                                        System.out.println("Компания найдена!");
+                                        Company.tableHeader();
+                                        System.out.printf("* %-5d", 1);
+                                        System.out.print(city.getListOfCompany().get(indexOfCompany));
+                                    } else {
+                                        System.out.println("Компания не найдена.");
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } while (AuxiliaryClass.answerYesOrNo("Желаете продолжить поиск компаний?"));
+    }
 }
 
 

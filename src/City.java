@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -395,7 +396,7 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
             i++;
         }
         int number, modeNumber;
-        number = Country.chooseField("сортировки списка");
+        number = Company.chooseField("сортировки списка");
         if ((number == 1) || (number == 6)) {
             System.out.println("1.В алфавитном порядке");
             System.out.println("2.В обратном алфавитному порядке");
@@ -413,10 +414,11 @@ public class City extends AbstractElement implements Modifiable<City>, Cloneable
             if ((modeNumber < 1) || (modeNumber > 2))
                 System.out.println("Действия под данным номером нет!");
         } while ((modeNumber < 1) || (modeNumber > 2));
+        Main.scanner.nextLine();
         CompanyComparator comparator = new CompanyComparator(Company.getSortField(number));
         listOfCompany.sort(comparator);
         if (modeNumber == 2)
-            listOfCompany.reversed();
+            Collections.reverse(listOfCompany);
         System.out.println("\n\nСписок после сортировки\n\n");
         Company.tableHeader();
         i = 1;
